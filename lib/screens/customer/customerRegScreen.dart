@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 
 import '../../utilites/appconstants.dart';
 import 'customerHomeScreen.dart';
@@ -18,6 +20,19 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confimPassswordContoller = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  dateselecting() async {
+    DateTime? date = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2021),
+        lastDate: DateTime(2025));
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(date!);
+    setState(() {
+      dobController.text = formatted;
+    });
+  }
+
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -93,6 +108,9 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                         if (value!.isEmpty) {
                           return "Please enter the phone number";
                         }
+                        if (value.length != 10) {
+                          return "please enter correct phone number";
+                        }
                       },
                       style: TextStyle(
                           color: Colors.black,
@@ -131,6 +149,10 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                         if (value!.isEmpty) {
                           return "Please enter the date of birth";
                         }
+                      },
+                      readOnly: true,
+                      onTap: () {
+                        dateselecting();
                       },
                       style: TextStyle(
                           color: Colors.black,
@@ -332,9 +354,23 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                     child: InkWell(
                       onTap: () {
                         final valid = formKey.currentState!.validate();
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CustomerHomeScreen(),
-                        ));
+                        if (valid == true) {
+                          if (passwordController.text ==
+                              confimPassswordContoller.text) {
+                            Apis().customerReg(
+                                nameController.text,
+                                addressController.text,
+                                dobController.text,
+                                phoneController.text,
+                                emailController.text,
+                                passwordController.text,
+                                context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    "Password and confirm password  NOT match")));
+                          }
+                        }
                       },
                       child: Container(
                         height: 40,

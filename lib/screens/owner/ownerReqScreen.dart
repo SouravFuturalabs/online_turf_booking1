@@ -25,15 +25,17 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
   TextEditingController turflocationController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
-  getlocation()async{
+  bool islicenseCliked = false;
+  bool isimageCliked = false;
 
+  getlocation() async {
     Location location = Location();
-   LocationData locationData =await location.getLocation();
-   setState(() {
-     turflocationController.text= "long: ${locationData.longitude}, lati :${locationData.latitude}";
-   });
+    LocationData locationData = await location.getLocation();
+    setState(() {
+      turflocationController.text =
+          "long: ${locationData.longitude}, lati :${locationData.latitude}";
+    });
   }
-
 
   final formKey = GlobalKey<FormState>();
   File? pickedImage;
@@ -58,6 +60,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     if (image != null) {
                       setState(() {
                         pickedImage = File(image.path);
+                        isimageCliked = true;
                       });
                     }
                   },
@@ -98,6 +101,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     if (image != null) {
                       setState(() {
                         pickedImage = File(image.path);
+                        isimageCliked = true;
                       });
                     }
                   },
@@ -155,6 +159,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     if (image != null) {
                       setState(() {
                         license = File(image.path);
+                        islicenseCliked = true;
                       });
                     }
                   },
@@ -195,6 +200,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     if (image != null) {
                       setState(() {
                         pickedImage = File(image.path);
+                        islicenseCliked = true;
                       });
                     }
                   },
@@ -293,6 +299,9 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                         if (value!.isEmpty) {
                           return "Please enter the phone number";
                         }
+                        if(value.length != 10){
+                          return "please enter the correct phone number";
+                        }
                       },
                       style: TextStyle(
                           color: Colors.black,
@@ -329,7 +338,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       controller: emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Please ente the email";
+                          return "Please enter the email";
                         }
                       },
                       style: TextStyle(
@@ -452,7 +461,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       controller: turfnameContoler,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Please ente the turf details";
+                          return "Please enter the turf details";
                         }
                       },
                       style: TextStyle(
@@ -490,7 +499,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       controller: turflocationController,
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Please ente the turf loction";
+                          return "Please enter the turf loction";
                         }
                       },
                       style: TextStyle(
@@ -498,12 +507,14 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                           fontSize: 17,
                           fontWeight: FontWeight.w500),
                       readOnly: true,
-                      onTap: (){
+                      onTap: () {
                         getlocation();
                       },
-
                       decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.location_on_sharp,color: Colors.grey,),
+                          suffixIcon: Icon(
+                            Icons.location_on_sharp,
+                            color: Colors.grey,
+                          ),
                           errorStyle: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w500),
                           errorBorder: OutlineInputBorder(
@@ -555,7 +566,9 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                                 child: Text(
                                   license == null
                                       ? "license"
-                                      : license!.path.toString().substring(51,80),
+                                      : license!.path
+                                          .toString()
+                                          .substring(51, 80),
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 18),
                                   overflow: TextOverflow.ellipsis,
@@ -596,7 +609,9 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                                 child: Text(
                                   pickedImage == null
                                       ? "image"
-                                      : pickedImage!.path.toString().substring(51,80),
+                                      : pickedImage!.path
+                                          .toString()
+                                          .substring(51, 80),
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 18),
                                   overflow: TextOverflow.ellipsis,
@@ -629,9 +644,25 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     child: InkWell(
                       onTap: () {
                         final valid = formKey.currentState!.validate();
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => OwnerHomeScreen(),
-                        ));
+                        if (valid == true) {
+                          if(confimPassswordContoller.text == passwordController.text){
+                            if (islicenseCliked == true &&
+                                isimageCliked == true) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => OwnerHomeScreen(),
+                              ));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content:
+                                  Text("please upload license and image")));
+                            }
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    "Password and confirm password  NOT match")));
+                          }
+
+                        }
                       },
                       child: Container(
                         height: 40,
