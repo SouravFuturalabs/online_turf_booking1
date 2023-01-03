@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 
 import '../../utilites/appconstants.dart';
 import 'ownerHomeScreen.dart';
@@ -199,7 +200,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
 
                     if (image != null) {
                       setState(() {
-                        pickedImage = File(image.path);
+                        license = File(image.path);
                         islicenseCliked = true;
                       });
                     }
@@ -299,7 +300,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                         if (value!.isEmpty) {
                           return "Please enter the phone number";
                         }
-                        if(value.length != 10){
+                        if (value.length != 10) {
                           return "please enter the correct phone number";
                         }
                       },
@@ -645,23 +646,34 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       onTap: () {
                         final valid = formKey.currentState!.validate();
                         if (valid == true) {
-                          if(confimPassswordContoller.text == passwordController.text){
+                          if (confimPassswordContoller.text ==
+                              passwordController.text) {
                             if (islicenseCliked == true &&
                                 isimageCliked == true) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => OwnerHomeScreen(),
-                              ));
+                              Apis().turfReg(
+                                  turfnameContoler.text,
+                                  turflocationController.text,
+                                  "12345",
+                                  nameController.text,
+                                  pickedImage!,
+                                  emailController.text,
+                                  phoneController.text,
+                                  license!,
+                                  passwordController.text);
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //   builder: (context) => OwnerHomeScreen(),
+                              // ));
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content:
-                                  Text("please upload license and image")));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          "please upload license and image")));
                             }
-                          }else{
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
                                     "Password and confirm password  NOT match")));
                           }
-
                         }
                       },
                       child: Container(

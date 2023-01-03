@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -99,6 +100,29 @@ class Apis {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Somthing went wrong please try again")));
     }
+  }
+
+  turfReg(String tname, tlocation, accountnum, ownername, File image,
+      String email, String phone, File licphoto,String password)async {
+    final fullurl = "${url}turf_reg.php";
+    var request = MultipartRequest("POST", Uri.parse(fullurl));
+    request.fields["Turf_name"] = tname;
+    request.fields["Turf_location"] = tlocation;
+    request.fields["owner_acc"] = accountnum;
+    request.fields["owner_name"] = ownername;
+    request.files.add(MultipartFile.fromBytes(
+        "image", File(image!.path).readAsBytesSync(),
+        filename: image!.path));
+    request.fields["Owner_email"] = email;
+    request.fields['owner_ph'] = phone;
+    request.files.add(MultipartFile.fromBytes(
+        "licence", File(licphoto.path).readAsBytesSync(),
+        filename: licphoto.path));
+    request.fields['password'] = password;
+
+    var response =await request.send();
+
+
   }
 
   // var request = http.MultipartRequest("POST", Uri.parse(urls));
