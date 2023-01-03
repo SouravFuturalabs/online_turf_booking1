@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:online_turf_booking/screens/notificationScreen.dart';
 import 'package:online_turf_booking/screens/settingsScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utilites/appconstants.dart';
+import '../loginscreen.dart';
 import 'addnotificationScreen.dart';
 import '../editprofileScreen.dart';
 import 'paymentRecordScreen.dart';
@@ -15,6 +17,34 @@ class OwnerHomeScreen extends StatefulWidget {
 }
 
 class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
+  String? type;
+  String? name;
+  String? id;
+  String? email;
+  String? fnamelatter;
+  getdetails() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    type = await sharedPreferences.getString("type");
+    name = await sharedPreferences.getString("name");
+    if (name!.length >= 3) {
+      fnamelatter = name!.substring(0, 1).toString();
+    } else {
+      fnamelatter = "";
+    }
+
+    id = await sharedPreferences.getString("id");
+    email = await sharedPreferences.getString("email");
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getdetails();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,15 +63,15 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
               child: UserAccountsDrawerHeader(
                 decoration: BoxDecoration(color: AppConstants.primarycolors),
                 accountName: Text(
-                  "Abhishek Mishra",
+                  name ?? "loading",
                   style: TextStyle(fontSize: 18),
                 ),
-                accountEmail: Text("abhishekm977@gmail.com"),
+                accountEmail: Text(email ?? "loading"),
                 currentAccountPictureSize: Size.square(50),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 165, 255, 137),
                   child: Text(
-                    "A",
+                    fnamelatter ?? "",
                     style: TextStyle(fontSize: 30.0, color: Colors.blue),
                   ), //Text
                 ), //circleAvatar
@@ -104,10 +134,18 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
               child: ListTile(
                 title: Text("Logout"),
                 trailing: Icon(Icons.logout),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Settings(),
-                  ));
+                onTap: () async {
+                  SharedPreferences sharefp =
+                      await SharedPreferences.getInstance();
+                  await sharefp.clear();
+                  Navigator.of(context).pushAndRemoveUntil(
+                    // the new route
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => LoginScreen(),
+                    ),
+
+                    (Route route) => false,
+                  );
                 },
               ),
             ),

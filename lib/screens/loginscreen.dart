@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 import 'package:online_turf_booking/utilites/appconstants.dart';
 
 import 'customer/customerRegScreen.dart';
@@ -29,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (ctx) => CustomerRegScreen()));
                   },
@@ -63,14 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 15,
                 ),
                 InkWell(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (ctx) => OwnerReqScreen()));
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (ctx) => OwnerReqScreen()));
                   },
                   child: Container(
                     height: 40,
                     width: 190,
-                      decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                         color: AppConstants.primarycolors,
                         boxShadow: [
                           BoxShadow(
@@ -100,8 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -135,10 +134,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 17,
                         fontWeight: FontWeight.w500),
                     decoration: InputDecoration(
-                        errorStyle:
-                            TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                        errorStyle: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500),
                         errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 2)),
+                            borderSide:
+                                BorderSide(color: Colors.red, width: 2)),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: AppConstants.primarycolors, width: 2),
@@ -173,10 +173,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontSize: 17,
                         fontWeight: FontWeight.w500),
                     decoration: InputDecoration(
-                        errorStyle:
-                            TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                        errorStyle: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500),
                         errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red, width: 2)),
+                            borderSide:
+                                BorderSide(color: Colors.red, width: 2)),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: AppConstants.primarycolors, width: 2),
@@ -222,9 +223,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 18.0),
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       final valid = formKey.currentState!.validate();
-
+                      if (valid == true) {
+                        Apis().login(nameController.text,
+                            passwordController.text, context);
+                      }
                     },
                     child: Container(
                       height: 40,
@@ -274,7 +278,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           InkWell(
                             onTap: () {
                               customerOrowner();
-
                             },
                             child: Text(
                               "Sign Up",

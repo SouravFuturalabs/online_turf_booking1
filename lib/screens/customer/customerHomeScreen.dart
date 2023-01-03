@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:online_turf_booking/screens/loginscreen.dart';
 import 'package:online_turf_booking/utilites/appconstants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../editprofileScreen.dart';
 import 'feedbackScreen.dart';
@@ -17,6 +19,34 @@ class CustomerHomeScreen extends StatefulWidget {
 
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
+  String? type;
+  String? name;
+  String? id;
+  String? email;
+  String? fnamelatter;
+  getdetails() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    type = await sharedPreferences.getString("type");
+    name = await sharedPreferences.getString("name");
+    if (name!.length >= 3) {
+      fnamelatter = name!.substring(0, 1).toString();
+    } else {
+      fnamelatter = "";
+    }
+
+    id = await sharedPreferences.getString("id");
+    email = await sharedPreferences.getString("email");
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getdetails();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,15 +81,15 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               child: UserAccountsDrawerHeader(
                 decoration: BoxDecoration(color: AppConstants.primarycolors),
                 accountName: Text(
-                  "Abhishek Mishra",
+                  name ?? "loading...",
                   style: TextStyle(fontSize: 18),
                 ),
-                accountEmail: Text("abhishekm977@gmail.com"),
+                accountEmail: Text(email ?? "loading..."),
                 currentAccountPictureSize: Size.square(50),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 165, 255, 137),
                   child: Text(
-                    "A",
+                    fnamelatter ?? "",
                     style: TextStyle(fontSize: 30.0, color: Colors.blue),
                   ), //Text
                 ), //circleAvatar
@@ -69,10 +99,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               child: ListTile(
                 title: Text("profile"),
                 trailing: Icon(Icons.account_circle),
-                onTap: (){
-
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProfileScreen(),));
-
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(),
+                  ));
                 },
               ),
             ),
@@ -80,10 +110,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               child: ListTile(
                 title: Text("My booking"),
                 trailing: Icon(Icons.book),
-                onTap: (){
-
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => MybookingScreen(),));
-
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => MybookingScreen(),
+                  ));
                 },
               ),
             ),
@@ -91,8 +121,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               child: ListTile(
                 title: Text("Notification"),
                 trailing: Icon(Icons.notifications),
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NotificationScreen(),));
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => NotificationScreen(),
+                  ));
                 },
               ),
             ),
@@ -100,8 +132,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               child: ListTile(
                 title: Text("Feedback"),
                 trailing: Icon(Icons.feedback),
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => FeedbackScreen(),));
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => FeedbackScreen(),
+                  ));
                 },
               ),
             ),
@@ -109,10 +143,19 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               child: ListTile(
                 title: Text("Logout"),
                 trailing: Icon(Icons.logout),
-                onTap: (){
+                onTap: () async {
+                  SharedPreferences sharefp =
+                      await SharedPreferences.getInstance();
+                  await sharefp.clear();
+                  Navigator.of(context).pushAndRemoveUntil(
+                    // the new route
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => LoginScreen(),
+                    ),
 
-                 // Navigator.of(context).push(MaterialPageRoute(builder: (context) => Settings(),));
-
+                    (Route route) => false,
+                  );
+                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => Settings(),));
                 },
               ),
             ),
