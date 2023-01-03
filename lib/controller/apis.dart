@@ -25,6 +25,7 @@ class Apis {
           sharedPreferences.setString("name", rbody["Cname"]);
           sharedPreferences.setString("email", rbody["CEmail"]);
           sharedPreferences.setString("type", rbody["type"]);
+          sharedPreferences.setString("url", url);
           Navigator.of(context).pushAndRemoveUntil(
             // the new route
             MaterialPageRoute(
@@ -40,6 +41,7 @@ class Apis {
           sharedPreferences.setString("name", rbody["Turf_name"]);
           sharedPreferences.setString("email", rbody["Owner_email"]);
           sharedPreferences.setString("type", rbody["type"]);
+          sharedPreferences.setString("url", url);
           Navigator.of(context).pushAndRemoveUntil(
             // the new route
             MaterialPageRoute(
@@ -82,6 +84,7 @@ class Apis {
         sharedPreferences.setString("name", rbody["Cname"]);
         sharedPreferences.setString("email", rbody["CEmail"]);
         sharedPreferences.setString("type", rbody["user_type"]);
+        sharedPreferences.setString("url", url);
 
         print(response.body);
         Navigator.of(context).pushAndRemoveUntil(
@@ -103,7 +106,7 @@ class Apis {
   }
 
   turfReg(String tname, tlocation, accountnum, ownername, File image,
-      String email, String phone, File licphoto,String password)async {
+      String email, String phone, File licphoto, String password) async {
     final fullurl = "${url}turf_reg.php";
     var request = MultipartRequest("POST", Uri.parse(fullurl));
     request.fields["Turf_name"] = tname;
@@ -120,19 +123,22 @@ class Apis {
         filename: licphoto.path));
     request.fields['password'] = password;
 
-    var response =await request.send();
-
-
+    //var response =await request.send();
+    request.send().then((response) async {
+      if (response.statusCode == 200) print("Uploaded!");
+      final data = await Response.fromStream(response);
+      print(data.body);
+    });
   }
 
-  // var request = http.MultipartRequest("POST", Uri.parse(urls));
-  // request.fields["latitude"] = lati.toString();
-  // request.fields["longitude"] = long.toString();
-  // request.fields["employee"] = id.toString();
-  // request.files.add(http.MultipartFile.fromBytes(
-  // "photo", File(file!.path).readAsBytesSync(),
-  // filename: file!.path));
-  // request.fields["date"] = date.toString();
-  // request.fields["time"] = timess.toString();
-  // var res = await request.send();
+
+ Future<dynamic> getfullturfdeatils()async{
+    var response = await get(Uri.parse("${url}view_turf.php") );
+    if(response.statusCode ==200){
+      var body = jsonDecode(response.body);
+      return body;
+    }
+  }
+
+
 }

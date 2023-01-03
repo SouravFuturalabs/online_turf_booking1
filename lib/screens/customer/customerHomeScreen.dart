@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 import 'package:online_turf_booking/screens/loginscreen.dart';
 import 'package:online_turf_booking/utilites/appconstants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -216,47 +217,67 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                   ),
                 ),
               ),
-              Expanded(
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20),
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => SingleTurfDetails(),
-                          ));
-                        },
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        image: DecorationImage(
-                                            fit: BoxFit.contain,
-                                            image: NetworkImage(
-                                                "https://5.imimg.com/data5/UF/VO/WA/SELLER-2751211/fifa-certified-artificial-football-grass-500x500.jpg"))),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "Kozhikode",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                              )
-                            ],
-                          ),
+              FutureBuilder(
+                  future: Apis().getfullturfdeatils(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppConstants.primarycolors,
                         ),
                       );
-                    }),
-              )
+                    }
+                    if (snapshot.hasData) {
+                      return Expanded(
+                        child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 20),
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => SingleTurfDetails(),
+                                  ));
+                                },
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                image: DecorationImage(
+                                                    fit: BoxFit.contain,
+                                                    image: NetworkImage(
+                                                        "https://5.imimg.com/data5/UF/VO/WA/SELLER-2751211/fifa-certified-artificial-football-grass-500x500.jpg"))),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        "Kozhikode",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                      );
+                    } else {
+                      return Center(
+                        child: Text("No Turf Available"),
+                      );
+                    }
+                  })
             ],
           ),
         ),
