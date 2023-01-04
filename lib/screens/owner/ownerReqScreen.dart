@@ -26,6 +26,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
   TextEditingController turflocationController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController accountController = TextEditingController();
+  TextEditingController rateperhourController = TextEditingController();
 
   bool islicenseCliked = false;
   bool isimageCliked = false;
@@ -63,6 +64,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       setState(() {
                         pickedImage = File(image.path);
                         isimageCliked = true;
+                        Navigator.pop(context);
                       });
                     }
                   },
@@ -104,6 +106,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       setState(() {
                         pickedImage = File(image.path);
                         isimageCliked = true;
+                        Navigator.pop(context);
                       });
                     }
                   },
@@ -162,6 +165,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       setState(() {
                         license = File(image.path);
                         islicenseCliked = true;
+                        Navigator.pop(context);
                       });
                     }
                   },
@@ -203,6 +207,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                       setState(() {
                         license = File(image.path);
                         islicenseCliked = true;
+                        Navigator.pop(context);
                       });
                     }
                   },
@@ -581,6 +586,53 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: rateperhourController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter the rate per hours";
+                        }
+                      },
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500),
+                      // readOnly: true,
+                      keyboardType: TextInputType.number,
+                      onTap: () {
+                        // getlocation();
+                      },
+                      decoration: InputDecoration(
+                          // suffixIcon: Icon(
+                          //   Icons.location_on_sharp,
+                          //   color: Colors.grey,
+                          // ),
+                          errorStyle: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w500),
+                          errorBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 2)),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: AppConstants.primarycolors, width: 2),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: AppConstants.primarycolors, width: 2),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: AppConstants.primarycolors, width: 2),
+                          ),
+                          hintText: "Rate per hours",
+                          hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "Upload Documents",
                       style:
@@ -689,7 +741,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                               passwordController.text) {
                             if (islicenseCliked == true &&
                                 isimageCliked == true) {
-                              Apis().turfReg(
+                              Service().turfReg(
                                   turfnameContoler.text,
                                   turflocationController.text,
                                   accountController.text,
@@ -698,7 +750,10 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                                   emailController.text,
                                   phoneController.text,
                                   license!,
-                                  passwordController.text);
+                                  passwordController.text,
+                                  rateperhourController.text,
+                                context
+                              );
                               // Navigator.of(context).push(MaterialPageRoute(
                               //   builder: (context) => OwnerHomeScreen(),
                               // ));

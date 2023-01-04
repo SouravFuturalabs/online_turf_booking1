@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:online_turf_booking/controller/apis.dart';
 
@@ -20,6 +23,7 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confimPassswordContoller = TextEditingController();
   TextEditingController addressController = TextEditingController();
+
   dateselecting() async {
     DateTime? date = await showDatePicker(
         context: context,
@@ -62,6 +66,7 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                       ),
                     ],
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
@@ -357,14 +362,15 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                         if (valid == true) {
                           if (passwordController.text ==
                               confimPassswordContoller.text) {
-                            Apis().customerReg(
+                            Service().customerReg(
                                 nameController.text,
                                 addressController.text,
                                 dobController.text,
                                 phoneController.text,
                                 emailController.text,
                                 passwordController.text,
-                                context);
+                                context,
+                            );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(

@@ -3,19 +3,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:online_turf_booking/screens/loginscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/customer/customerHomeScreen.dart';
 import '../screens/owner/ownerHomeScreen.dart';
 
-class Apis {
-  final url = "http://192.168.29.86/OnlineTurffManagement/API/";
+class Service {
+  String url = "http://192.168.29.86/OnlineTurffManagement/API/";
 
   login(String username, password, BuildContext context) async {
     var body = {"uname": username, "password": password};
     var response = await post(Uri.parse("${url}login.php"), body: body);
     if (response.statusCode == 200) {
       var rbody = jsonDecode(response.body);
+      print(rbody);
 
       if (rbody["message"] == "sucess") {
         if (rbody["type"] == "customer") {
@@ -53,7 +55,7 @@ class Apis {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("username or password not valid")));
+            SnackBar(content: Text("Somthing went wrong please try again")));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,8 +107,18 @@ class Apis {
     }
   }
 
-  turfReg(String tname, tlocation, accountnum, ownername, File image,
-      String email, String phone, File licphoto, String password) async {
+  turfReg(
+      String tname,
+      tlocation,
+      accountnum,
+      ownername,
+      File image,
+      String email,
+      String phone,
+      File licphoto,
+      String password,
+      String rateperhours,
+      BuildContext context) async {
     final fullurl = "${url}turf_reg.php";
     var request = MultipartRequest("POST", Uri.parse(fullurl));
     request.fields["Turf_name"] = tname;
@@ -122,23 +134,62 @@ class Apis {
         "licence", File(licphoto.path).readAsBytesSync(),
         filename: licphoto.path));
     request.fields['password'] = password;
+    request.fields['rate'] = rateperhours;
 
     //var response =await request.send();
     request.send().then((response) async {
-      if (response.statusCode == 200) print("Uploaded!");
-      final data = await Response.fromStream(response);
-      print(data.body);
+      if (response.statusCode == 200) {
+        print("Uploaded!");
+        final data = await Response.fromStream(response);
+
+        var rbody = jsonDecode(data.body);
+        if (rbody["message"] == "sucess") {
+          print(data.body);
+          SharedPreferences sharedPreferences =
+              await SharedPreferences.getInstance();
+          sharedPreferences.setString("id", rbody["Turf_id"]);
+          sharedPreferences.setString("name", rbody["Turf_name"]);
+          sharedPreferences.setString("email", rbody["Owner_email"]);
+          sharedPreferences.setString("type", rbody["user_type"]);
+          sharedPreferences.setString("url", url);
+          Navigator.of(context).pushAndRemoveUntil(
+            // the new route
+            MaterialPageRoute(
+              builder: (BuildContext context) => LoginScreen(),
+            ),
+
+            (Route route) => false,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Somthing went wrong please try again")));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Somthing went wrong please try again")));
+      }
     });
   }
 
-
- Future<dynamic> getfullturfdeatils()async{
-    var response = await get(Uri.parse("${url}view_turf.php") );
-    if(response.statusCode ==200){
+  Future<dynamic> getfullturfdeatils() async {
+    var response = await get(Uri.parse("${url}view_turf.php"));
+    if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
-      return body;
+
+      if (body[0]["message"] == null) {
+        print(body);
+        return body;
+      }
     }
   }
 
-
+  Future<dynamic> getSingleTurfDetails(String id) async {
+    var body = {"Turf_id": id};
+    var response = await post(Uri.parse("${url}view_turfid.php"), body: body);
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      print(body);
+      return body;
+    }
+  }
 }

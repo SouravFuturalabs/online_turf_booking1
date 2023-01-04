@@ -226,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       final valid = formKey.currentState!.validate();
                       if (valid == true) {
-                        Apis().login(nameController.text,
+                        Service().login(nameController.text,
                             passwordController.text, context);
                       }
                     },

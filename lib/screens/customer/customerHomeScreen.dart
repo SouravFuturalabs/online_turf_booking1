@@ -19,6 +19,8 @@ class CustomerHomeScreen extends StatefulWidget {
 }
 
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+  String? url;
+
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   String? type;
   String? name;
@@ -30,6 +32,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
     type = await sharedPreferences.getString("type");
     name = await sharedPreferences.getString("name");
+    url = await sharedPreferences.getString("url");
     if (name!.length >= 3) {
       fnamelatter = name!.substring(0, 1).toString();
     } else {
@@ -218,7 +221,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                 ),
               ),
               FutureBuilder(
-                  future: Apis().getfullturfdeatils(),
+                  future: Service().getfullturfdeatils(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -230,6 +233,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                     if (snapshot.hasData) {
                       return Expanded(
                         child: GridView.builder(
+                            itemCount: snapshot.data.length,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
@@ -239,7 +243,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                               return InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => SingleTurfDetails(),
+                                    builder: (context) => SingleTurfDetails(
+                                      id: snapshot.data[index]["Turf_id"]
+                                          .toString(),
+                                    ),
                                   ));
                                 },
                                 child: Container(
@@ -254,14 +261,14 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(30),
                                                 image: DecorationImage(
-                                                    fit: BoxFit.contain,
+                                                    fit: BoxFit.cover,
                                                     image: NetworkImage(
-                                                        "https://5.imimg.com/data5/UF/VO/WA/SELLER-2751211/fifa-certified-artificial-football-grass-500x500.jpg"))),
+                                                        "${url!.split("API/").first.toString()}Img/${snapshot.data[index]["image"]}"))),
                                           ),
                                         ),
                                       ),
                                       Text(
-                                        "Kozhikode",
+                                        snapshot.data[index]["Turf_name"],
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500),
