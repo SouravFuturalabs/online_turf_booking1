@@ -192,4 +192,18 @@ class Service {
       return body;
     }
   }
+
+  Future<dynamic> getCustomerdetails() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    print(id);
+
+    var body = {"Cid": id};
+    var response = await post(Uri.parse("${url}view_custid.php"), body: body);
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      print(body);
+      return body;
+    }
+  }
 }

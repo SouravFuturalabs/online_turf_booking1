@@ -41,6 +41,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
     id = await sharedPreferences.getString("id");
     email = await sharedPreferences.getString("email");
+    print(id);
     setState(() {});
   }
 
