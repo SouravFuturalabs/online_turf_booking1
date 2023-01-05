@@ -109,6 +109,7 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: phoneController,
+                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter the phone number";

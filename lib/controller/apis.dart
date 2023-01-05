@@ -7,6 +7,7 @@ import 'package:online_turf_booking/screens/loginscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/customer/customerHomeScreen.dart';
+import '../screens/customer/editprofileScreen.dart';
 import '../screens/owner/ownerHomeScreen.dart';
 
 class Service {
@@ -204,6 +205,65 @@ class Service {
       var body = jsonDecode(response.body);
       print(body);
       return body;
+    }
+  }
+
+  Future<dynamic> updatecustomerprofile(String name, email, oldemail, dob,
+      addresss, passord, phone, BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    print(id);
+    var body = {
+      "Cid": id,
+      "Cname": name,
+      "CEmail": "hj",
+      "Caddress": addresss,
+      "Cdob": dob,
+      "CPhone_no": phone,
+      "newemail": email,
+      "password": passord
+    };
+
+    //print(body);
+
+    var response = await post(Uri.parse("${url}update_cust.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      if (rbody["message"] == "sucess") {
+        print(response.body);
+        sharedPreferences.setString("name", rbody["Cname"]);
+        sharedPreferences.setString("email", rbody["CEmail"]);
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Profile Updated")));
+        return rbody["message"];
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Somthing went wrong please try again")));
+      }
+    }
+  }
+
+  addnotification(String notification,BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    print(id);
+    var body = {"Turf_id": id, "Notification": notification};
+    var response = await post(Uri.parse("${url}ins_notification.php"), body: body);
+    if(response.statusCode ==200){
+      var rbody=jsonDecode(response.body);
+      if(rbody["message"]=="sucess"){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Notification added!!")));
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Somthing went wrong please try again")));
+      }
+
+
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Somthing went wrong please try again")));
     }
   }
 }

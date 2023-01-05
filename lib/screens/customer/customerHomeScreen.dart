@@ -4,7 +4,7 @@ import 'package:online_turf_booking/screens/loginscreen.dart';
 import 'package:online_turf_booking/utilites/appconstants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../editprofileScreen.dart';
+import 'editprofileScreen.dart';
 import 'feedbackScreen.dart';
 import '../mybookingScreen.dart';
 import '../notificationScreen.dart';

@@ -6,7 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../utilites/appconstants.dart';
 import '../loginscreen.dart';
 import 'addnotificationScreen.dart';
-import '../editprofileScreen.dart';
+import '../customer/editprofileScreen.dart';
+import 'editprofileOwnerScreen.dart';
 import 'paymentRecordScreen.dart';
 
 class OwnerHomeScreen extends StatefulWidget {
@@ -83,7 +84,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                 trailing: Icon(Icons.account_circle),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EditProfileScreen(),
+                    builder: (context) => EditProfileOnwerScreen(),
                   ));
                 },
               ),

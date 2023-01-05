@@ -5,7 +5,9 @@ import '../../utilites/appconstants.dart';
 import 'paymentScreen.dart';
 
 class BookingScreen extends StatefulWidget {
-  const BookingScreen({Key? key}) : super(key: key);
+  String rate;
+  String id;
+   BookingScreen({Key? key,required this.rate,required this.id}) : super(key: key);
 
   @override
   State<BookingScreen> createState() => _BookingScreenState();

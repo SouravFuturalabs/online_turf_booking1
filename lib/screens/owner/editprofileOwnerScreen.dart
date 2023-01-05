@@ -1,21 +1,21 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
-import 'package:online_turf_booking/controller/apis.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utilites/appconstants.dart';
-import 'ownerHomeScreen.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 
-class OwnerReqScreen extends StatefulWidget {
-  const OwnerReqScreen({Key? key}) : super(key: key);
+class EditProfileOnwerScreen extends StatefulWidget {
+  const EditProfileOnwerScreen({Key? key}) : super(key: key);
 
   @override
-  State<OwnerReqScreen> createState() => _OwnerReqScreenState();
+  State<EditProfileOnwerScreen> createState() => _EditProfileOnwerScreenState();
 }
 
-class _OwnerReqScreenState extends State<OwnerReqScreen> {
+class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
@@ -28,19 +28,29 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
   TextEditingController accountController = TextEditingController();
   TextEditingController rateperhourController = TextEditingController();
 
-  bool islicenseCliked = false;
-  bool isimageCliked = false;
+  String alredyimage = "null";
+  String alredylice = "null";
 
-  getlocation() async {
-    Location location = Location();
-    LocationData locationData = await location.getLocation();
+  getdetails() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var details = await Service().getSingleTurfDetails(id!);
     setState(() {
-      turflocationController.text =
-          "long: ${locationData.longitude}, lati :${locationData.latitude}";
+      turfnameContoler.text = details["Turf_name"];
+      turflocationController.text = details["Turf_location"];
+      accountController.text = details["owner_acc"];
+      nameController.text = details["owner_name"];
+      emailController.text = details["Owner_email"];
+      phoneController.text = details["owner_ph"];
+      rateperhourController.text = details["rate"];
+      alredyimage = details["image"];
+      alredylice = details["licence"];
     });
   }
 
   final formKey = GlobalKey<FormState>();
+  bool islicenseCliked = false;
+  bool isimageCliked = false;
   File? pickedImage;
   File? license;
   pickimage() async {
@@ -246,6 +256,13 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    getdetails();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -255,10 +272,16 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
               key: formKey,
               child: Column(
                 children: [
-                  Text(
-                    "Register here..",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Edit Profile",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -448,44 +471,6 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Password",
-                          hintStyle: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500)),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: confimPassswordContoller,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter the confirm password";
-                        }
-                      },
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500),
-                      decoration: InputDecoration(
-                          errorStyle: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w500),
-                          errorBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 2)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppConstants.primarycolors, width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppConstants.primarycolors, width: 2),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppConstants.primarycolors, width: 2),
-                          ),
-                          hintText: "Confirm password",
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -737,39 +722,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     child: InkWell(
                       onTap: () {
                         final valid = formKey.currentState!.validate();
-                        if (valid == true) {
-                          if (confimPassswordContoller.text ==
-                              passwordController.text) {
-                            if (islicenseCliked == true &&
-                                isimageCliked == true) {
-                              Service().turfReg(
-                                  turfnameContoler.text,
-                                  turflocationController.text,
-                                  accountController.text,
-                                  nameController.text,
-                                  pickedImage!,
-                                  emailController.text,
-                                  phoneController.text,
-                                  license!,
-                                  passwordController.text,
-                                  rateperhourController.text,
-                                context
-                              );
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //   builder: (context) => OwnerHomeScreen(),
-                              // ));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          "please upload license and image")));
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    "Password and confirm password  NOT match")));
-                          }
-                        }
+                        if (valid == true) {}
                       },
                       child: Container(
                         height: 40,

@@ -210,7 +210,7 @@ class _SingleTurfDetailsState extends State<SingleTurfDetails> {
                       child: InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => BookingScreen(),
+                            builder: (context) => BookingScreen(rate: snapshot.data["rate"],id: snapshot.data["Turf_id"]),
                           ));
                         },
                         child: Container(
