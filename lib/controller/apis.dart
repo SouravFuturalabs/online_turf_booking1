@@ -244,26 +244,95 @@ class Service {
     }
   }
 
-  addnotification(String notification,BuildContext context) async {
+  addnotification(String notification, BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = await sharedPreferences.getString("id");
     print(id);
     var body = {"Turf_id": id, "Notification": notification};
-    var response = await post(Uri.parse("${url}ins_notification.php"), body: body);
-    if(response.statusCode ==200){
-      var rbody=jsonDecode(response.body);
-      if(rbody["message"]=="sucess"){
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Notification added!!")));
-      }else{
+    var response =
+        await post(Uri.parse("${url}ins_notification.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      if (rbody["message"] == "sucess") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Notification added!!")));
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Somthing went wrong please try again")));
       }
-
-
-    }else{
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Somthing went wrong please try again")));
+    }
+  }
+
+  Future<dynamic> bookturf(
+      String turfid, bookingdate, bookingStatus, timeslot, daysno) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {
+      "Turf_id": turfid,
+      "bdate": bookingdate,
+      "Cid": id,
+      "Book_status": bookingStatus,
+      "time_slot": timeslot,
+      "days_no": daysno
+    };
+    print(body);
+    var response = await post(Uri.parse("${url}book_turf.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      String? a = "e";
+
+      if (rbody["Book_id"].isNotEmpty) {
+        return rbody["Book_id"];
+      }
+    }
+  }
+
+  Future<dynamic> getNotification() async {
+    var response = await get(Uri.parse("${url}view_notification.php"));
+    if (response.statusCode == 200) {
+      print(response.body);
+      return jsonDecode(response.body);
+    }
+  }
+
+  Future<dynamic> addfeedback(
+      String turfid, feedback, BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {"Turf_id": turfid, "Cid": id, "Feedback": feedback};
+    var response = await post(Uri.parse("${url}ins_feedback.php"), body: body);
+
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+
+      if (rbody["message"] == "sucess") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("feedback added")));
+        return "sucess";
+      }
+    }
+  }
+
+  Future<dynamic> viewMyBooking() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {"Cid": id};
+    var response = await post(Uri.parse("${url}view_book.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      return rbody;
+    }
+  }
+
+  Future<dynamic> update(String bookid) async {
+    var body = {"Book_id": bookid};
+    var response = await post(Uri.parse("${url}update_book.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      return rbody;
     }
   }
 }

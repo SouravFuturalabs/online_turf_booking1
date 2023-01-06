@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../utilites/appconstants.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({Key? key}) : super(key: key);
+  String bookingid;
+  String cardname;
+   PaymentScreen({Key? key,required this.bookingid,required this.cardname}) : super(key: key);
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();

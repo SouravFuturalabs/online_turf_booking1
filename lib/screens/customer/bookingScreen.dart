@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 
 import '../../utilites/appconstants.dart';
 import 'paymentScreen.dart';
@@ -7,7 +8,8 @@ import 'paymentScreen.dart';
 class BookingScreen extends StatefulWidget {
   String rate;
   String id;
-   BookingScreen({Key? key,required this.rate,required this.id}) : super(key: key);
+  BookingScreen({Key? key, required this.rate, required this.id})
+      : super(key: key);
 
   @override
   State<BookingScreen> createState() => _BookingScreenState();
@@ -15,7 +17,7 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen> {
   ///while clicking confirm
-  choosePaymentmode() {
+  choosePaymentmode(String bookingid) {
     showDialog(
       context: context,
       builder: (context) {
@@ -27,8 +29,11 @@ class _BookingScreenState extends State<BookingScreen> {
               children: [
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (ctx) => PaymentScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (ctx) => PaymentScreen(
+                              bookingid: bookingid,
+                              cardname: "Credit Card",
+                            )));
                   },
                   child: Container(
                     height: 40,
@@ -61,6 +66,11 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
                 InkWell(
                   onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (ctx) => PaymentScreen(
+                              bookingid: bookingid,
+                              cardname: "Debit Card",
+                            )));
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (ctx) => OwnerReqScreen()));
                   },
@@ -100,16 +110,21 @@ class _BookingScreenState extends State<BookingScreen> {
 
   String? _fromtime;
   fromtime() async {
-    TimeOfDay? time =
-        await showTimePicker(context: context, initialTime: TimeOfDay.now(),);
+    TimeOfDay? time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
     setState(() {
       _fromtime = time.toString().substring(10, 15);
     });
   }
+
   String? _totime;
   totime() async {
-    TimeOfDay? time =
-    await showTimePicker(context: context, initialTime: TimeOfDay.now(),);
+    TimeOfDay? time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
     setState(() {
       _totime = time.toString().substring(10, 15);
     });
@@ -129,6 +144,7 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   int bookingfor = -1;
+  String? bookingforname;
   TextEditingController dateController = TextEditingController();
 
   @override
@@ -166,7 +182,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      "8000",
+                      widget.rate.toString(),
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                     ),
@@ -314,7 +330,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     InkWell(
-                      onTap:(){
+                      onTap: () {
                         fromtime();
                       },
                       child: Container(
@@ -322,7 +338,9 @@ class _BookingScreenState extends State<BookingScreen> {
                         width: 120,
                         child: Center(
                             child: Text(
-                              _fromtime == null ?"From time":_fromtime.toString(),
+                          _fromtime == null
+                              ? "From time"
+                              : _fromtime.toString(),
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         )),
@@ -332,7 +350,7 @@ class _BookingScreenState extends State<BookingScreen> {
                       ),
                     ),
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         totime();
                       },
                       child: Container(
@@ -340,7 +358,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         width: 120,
                         child: Center(
                             child: Text(
-                          _totime == null ?"To time":_totime.toString(),
+                          _totime == null ? "To time" : _totime.toString(),
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         )),
@@ -361,8 +379,81 @@ class _BookingScreenState extends State<BookingScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 18.0),
                     child: InkWell(
-                      onTap: () {
-                        choosePaymentmode();
+                      onTap: () async {
+                        print(_fromtime);
+                        if (dateController.text.isNotEmpty &&
+                            _fromtime!.isNotEmpty &&
+                            _totime!.isNotEmpty &&
+                            bookingfor != -1) {
+                          if (bookingfor == 1) {
+                            setState(() {
+                              bookingforname = "single day";
+                            });
+                          }
+                          if (bookingfor == 2) {
+                            setState(() {
+                              bookingforname = "week";
+                            });
+                          }
+                          if (bookingfor == 3) {
+                            setState(() {
+                              bookingforname = "month";
+                            });
+                          }
+                          var data = await  Service().bookturf(
+                                 widget.id,
+                                 dateController.text,
+                                 "pending",
+                                 "${_fromtime} ${_totime}",
+                                 bookingforname);
+
+                            if(data !=null){
+                              print(data);
+                             // choosePaymentmode(data);
+                              choosePaymentmode(data);
+                            }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("please fill all the details")));
+                        }
+
+                        // if (dateController.text.isEmpty &&
+                        //     _fromtime == null &&
+                        //     _totime == null &&
+                        //     bookingfor == -1) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        //       content: Text("please fill all the details")));
+                        // } else {
+                        //   if (bookingfor == 1) {
+                        //     setState(() {
+                        //       bookingforname = "single day";
+                        //     });
+                        //   }
+                        //   if (bookingfor == 2) {
+                        //     setState(() {
+                        //       bookingforname = "week";
+                        //     });
+                        //   }
+                        //   if (bookingfor == 3) {
+                        //     setState(() {
+                        //       bookingforname = "month";
+                        //     });
+                        //   }
+
+                        // var data = await  Service().bookturf(
+                        //        widget.id,
+                        //        dateController.text,
+                        //        "pending",
+                        //        "${_fromtime} ${_totime}",
+                        //        bookingforname);
+                        //
+                        //   if(data !=null){
+                        //     print(data);
+                        //    // choosePaymentmode(data);
+                        //     choosePaymentmode(data);
+                        //   }
+                        //}
+                        // choosePaymentmode();
                         // Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookingScreen(),));
                       },
                       child: Container(

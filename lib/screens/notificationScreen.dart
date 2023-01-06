@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 
 import '../utilites/appconstants.dart';
 
@@ -12,7 +13,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Center(
           child: Column(
@@ -29,24 +30,41 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context,index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: AppConstants.primarycolors, width: 2)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
-                        ),
-
-                      ),
-                    );
-                  }
-                ),
+                child: FutureBuilder(
+                    future: Service().getNotification(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppConstants.primarycolors,
+                          ),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: AppConstants.primarycolors,
+                                          width: 2)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        snapshot.data[index]["Notification"]),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return Center(
+                          child: Text("No Notification"),
+                        );
+                      }
+                    }),
               )
             ],
           ),
