@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:online_turf_booking/controller/apis.dart';
 
@@ -33,38 +31,69 @@ class _PaymentRecordScreenState extends State<PaymentRecordScreen> {
               ),
               Expanded(
                 child: FutureBuilder(
-                  future: Service().paymenthistory(),
-                  builder: (context,sapshot) {
-                    if (sapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: AppConstants.primarycolors,
-                        ),
-                      );
-                    }
-                    if(sapshot.hasData){
-                      return ListView.builder(itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: AppConstants.primarycolors, width: 2)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("payment 1"),
-                            ),
+                    future: Service().paymenthistory(),
+                    builder: (context, sapshot) {
+                      if (sapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppConstants.primarycolors,
                           ),
                         );
-                      }); 
-                    }else{
-                      return Center(
-                        child: Text("No payment history"),
-                      );
-                    }
-                    
-                  }
-                ),
+                      }
+                      if (sapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: sapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: AppConstants.primarycolors,
+                                          width: 2)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Holder name : "),
+                                            Text("Account No :"),
+                                            Text("Card Type :"),
+                                            Text("Amount :")
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(sapshot.data[index]
+                                                ["holder_name"]),
+                                            Text(
+                                                sapshot.data[index]["card_no"]),
+                                            Text(sapshot.data[index]
+                                                ["payment_type"]),
+                                            Text(sapshot.data[index]["amount"]),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return Center(
+                          child: Text("No payment history"),
+                        );
+                      }
+                    }),
               )
             ],
           ),
