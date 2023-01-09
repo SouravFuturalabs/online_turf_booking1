@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 import 'package:online_turf_booking/screens/notificationScreen.dart';
+import 'package:online_turf_booking/screens/owner/turfBookHistoryScreen.dart';
 import 'package:online_turf_booking/screens/settingsScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -133,6 +135,17 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
             ),
             Card(
               child: ListTile(
+                title: Text("History"),
+                trailing: Icon(Icons.history),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TurfHistoryScreen(),
+                  ));
+                },
+              ),
+            ),
+            Card(
+              child: ListTile(
                 title: Text("Logout"),
                 trailing: Icon(Icons.logout),
                 onTap: () async {
@@ -191,107 +204,209 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Expanded(
-                child: ListView.builder(itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: AppConstants.primarycolors, width: 2)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Text("booked person name"),
-                                  Text("Date"),
-                                  Text("Time")
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 1.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        // final valid = formKey.currentState!.validate();
-                                      },
-                                      child: Container(
-                                        height: 30,
-                                        width: 90,
-                                        decoration: BoxDecoration(
+              FutureBuilder(
+                  future: Service().allRequest(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppConstants.primarycolors,
+                        ),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      return Expanded(
+                        child: ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
                                             color: AppConstants.primarycolors,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey,
-                                                offset: Offset(4, 4),
-                                                spreadRadius: 1,
-                                                blurRadius: 2,
-                                              )
-                                            ],
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20))),
-                                        child: Center(
-                                          child: Text(
-                                            "Accept",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                            width: 2)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          // mainAxisAlignment: MainAxisAlignment.end,
+
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0, bottom: 8, left: 8),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text("Customer : "),
+                                                  Text("Date :"),
+                                                  Text("Time :")
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 18.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        // final valid = formKey.currentState!.validate();
-                                      },
-                                      child: Container(
-                                        height: 30,
-                                        width: 90,
-                                        decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey,
-                                                offset: Offset(4, 4),
-                                                spreadRadius: 1,
-                                                blurRadius: 2,
-                                              )
-                                            ],
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20))),
-                                        child: Center(
-                                          child: Text(
-                                            "Reject",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0, bottom: 8),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 100,
+                                                    child: Text(
+                                                      "${snapshot.data[index]["Cname"]}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                      "${snapshot.data[index]["bdate"]}"),
+                                                  Text(
+                                                      "${snapshot.data[index]["time_slot"].toString().split(" ").first} to ${snapshot.data[index]["time_slot"].toString().split(" ").last}")
+                                                ],
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )),
-                  );
-                }),
-              )
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 1.0),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    var response =
+                                                        await Service()
+                                                            .acceptOrReject(
+                                                                snapshot.data[
+                                                                        index]
+                                                                    ["Book_id"],
+                                                                "approve");
+
+                                                    if (response["message"] ==
+                                                        "sucess") {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(SnackBar(
+                                                              content: Text(
+                                                                  "Approved")));
+                                                      setState(() {});
+                                                    }
+                                                    // final valid = formKey.currentState!.validate();
+                                                  },
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 90,
+                                                    decoration: BoxDecoration(
+                                                        color: AppConstants
+                                                            .primarycolors,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey,
+                                                            offset:
+                                                                Offset(4, 4),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 2,
+                                                          )
+                                                        ],
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    20))),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Accept",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 18.0),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    var response =
+                                                        await Service()
+                                                            .acceptOrReject(
+                                                                snapshot.data[
+                                                                        index]
+                                                                    ["Book_id"],
+                                                                "reject");
+
+                                                    if (response["message"] ==
+                                                        "sucess") {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(SnackBar(
+                                                              content: Text(
+                                                                  "Rejected")));
+                                                      setState(() {});
+                                                    }
+                                                    // final valid = formKey.currentState!.validate();
+                                                  },
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 90,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.red,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.grey,
+                                                            offset:
+                                                                Offset(4, 4),
+                                                            spreadRadius: 1,
+                                                            blurRadius: 2,
+                                                          )
+                                                        ],
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    20))),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Reject",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                              );
+                            }),
+                      );
+                    } else {
+                      return Center(
+                        child: Text("No Request"),
+                      );
+                    }
+                  })
             ],
           ),
         ),

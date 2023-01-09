@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'editprofileScreen.dart';
 import 'feedbackScreen.dart';
-import '../mybookingScreen.dart';
+import 'mybookingScreen.dart';
 import '../notificationScreen.dart';
 import '../settingsScreen.dart';
 import 'singleTurfDetails.dart';

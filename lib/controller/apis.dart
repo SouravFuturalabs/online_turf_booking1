@@ -323,16 +323,121 @@ class Service {
     var response = await post(Uri.parse("${url}view_book.php"), body: body);
     if (response.statusCode == 200) {
       var rbody = jsonDecode(response.body);
-      return rbody;
+      if (rbody[0]["message"] != "failed") {
+        return rbody;
+      }
+      print(rbody);
     }
   }
 
-  Future<dynamic> update(String bookid) async {
+  Future<dynamic> cancelbooking(String bookid) async {
     var body = {"Book_id": bookid};
     var response = await post(Uri.parse("${url}update_book.php"), body: body);
     if (response.statusCode == 200) {
       var rbody = jsonDecode(response.body);
+      print(rbody);
       return rbody;
     }
   }
+
+  Future<dynamic> payment(String bookid, paymentType, cardnumber, expdate, cvv,
+      holdername, amount) async {
+    var body = {
+      "B_id": bookid,
+      "payment_type": paymentType,
+      "card_no": cardnumber,
+      "expiry_date": expdate,
+      "CVV": cvv,
+      "holder_name": holdername,
+      "amount": amount
+    };
+    var response = await post(Uri.parse("${url}ins_payment.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      print(rbody);
+      return rbody;
+    }
+  }
+
+  Future<dynamic> allRequest() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {
+      "Turf_id":id
+    };
+    var response = await post(Uri.parse("${url}view_turfrequest.php"), body: body);
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      print(rbody);
+      if (rbody[0]["message"] != "failed") {
+        return rbody;
+      }
+
+
+    }
+  }
+
+
+  Future<dynamic> acceptOrReject(String bookingid,status) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {
+      "Book_id":bookingid,
+      "status":status
+    };
+    var response = await post(Uri.parse("${url}approve_turfrequest.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      return rbody;
+
+
+    }
+  }
+
+
+  Future<dynamic> history() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {
+      "Turf_id":id,
+
+    };
+    var response = await post(Uri.parse("${url}view_turfhistory.php"), body: body);
+    if (response.statusCode == 200) {
+      var rbody = jsonDecode(response.body);
+      print(rbody);
+      if (rbody[0]["message"] != "failed") {
+        return rbody;
+      }
+
+
+    }
+  }
+
+
+  Future<dynamic> paymenthistory() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {
+      "Turf_id":id,
+
+    };
+    var response = await post(Uri.parse("${url}view_payhistory.php"), body: body);
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var rbody = jsonDecode(response.body);
+      print(rbody);
+      if (rbody[0]["message"] != "failed") {
+        return rbody;
+      }
+
+
+    }
+  }
+
+
+
 }

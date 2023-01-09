@@ -17,7 +17,7 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen> {
   ///while clicking confirm
-  choosePaymentmode(String bookingid) {
+  choosePaymentmode(String bookingid,amount) {
     showDialog(
       context: context,
       builder: (context) {
@@ -33,6 +33,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         builder: (ctx) => PaymentScreen(
                               bookingid: bookingid,
                               cardname: "Credit Card",
+                          amount: amount,
                             )));
                   },
                   child: Container(
@@ -70,6 +71,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         builder: (ctx) => PaymentScreen(
                               bookingid: bookingid,
                               cardname: "Debit Card",
+                          amount: amount,
                             )));
                     // Navigator.of(context).push(MaterialPageRoute(
                     //     builder: (ctx) => OwnerReqScreen()));
@@ -109,6 +111,7 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   String? _fromtime;
+  TimeOfDay? fromTimeOfDay;
   fromtime() async {
     TimeOfDay? time = await showTimePicker(
       context: context,
@@ -116,10 +119,12 @@ class _BookingScreenState extends State<BookingScreen> {
     );
     setState(() {
       _fromtime = time.toString().substring(10, 15);
+      fromTimeOfDay = time;
     });
   }
 
   String? _totime;
+  TimeOfDay? toTimeInTimeOfDay;
   totime() async {
     TimeOfDay? time = await showTimePicker(
       context: context,
@@ -127,6 +132,7 @@ class _BookingScreenState extends State<BookingScreen> {
     );
     setState(() {
       _totime = time.toString().substring(10, 15);
+      toTimeInTimeOfDay = time;
     });
   }
 
@@ -381,37 +387,61 @@ class _BookingScreenState extends State<BookingScreen> {
                     child: InkWell(
                       onTap: () async {
                         print(_fromtime);
+
+
                         if (dateController.text.isNotEmpty &&
                             _fromtime!.isNotEmpty &&
                             _totime!.isNotEmpty &&
                             bookingfor != -1) {
-                          if (bookingfor == 1) {
-                            setState(() {
-                              bookingforname = "single day";
-                            });
-                          }
-                          if (bookingfor == 2) {
-                            setState(() {
-                              bookingforname = "week";
-                            });
-                          }
-                          if (bookingfor == 3) {
-                            setState(() {
-                              bookingforname = "month";
-                            });
-                          }
-                          var data = await  Service().bookturf(
-                                 widget.id,
-                                 dateController.text,
-                                 "pending",
-                                 "${_fromtime} ${_totime}",
-                                 bookingforname);
+                          var nowSec = (fromTimeOfDay!.hour * 60 + fromTimeOfDay!.minute) * 60;
+                          var veiSec = (toTimeInTimeOfDay!.hour * 60 + toTimeInTimeOfDay!.minute) * 60;
+                          var dif = veiSec - nowSec;
+                          int diffInInt = dif.toInt();
+                          int convertIntoMint = (diffInInt/60).toInt();
+                          double hours = convertIntoMint/60;
+                          var rate = int.parse(widget.rate.toString()).toInt();
+                          var amount = rate*hours;
+
+                          print(" amount ${amount}");
+
+                          print(convertIntoMint);
+                          if(convertIntoMint>=60){
+                            if (bookingfor == 1) {
+                              setState(() {
+                                bookingforname = "single day";
+                              });
+                            }
+                            if (bookingfor == 2) {
+                              setState(() {
+                                bookingforname = "week";
+                                amount = rate*hours*7;
+                              });
+                            }
+                            if (bookingfor == 3) {
+                              setState(() {
+                                bookingforname = "month";
+                                amount = rate*hours*30;
+                              });
+                            }
+                            var data = await  Service().bookturf(
+                                widget.id,
+                                dateController.text,
+                                "pending",
+                                "${_fromtime} ${_totime}",
+                                bookingforname);
 
                             if(data !=null){
                               print(data);
-                             // choosePaymentmode(data);
-                              choosePaymentmode(data);
+                              // choosePaymentmode(data);
+                              choosePaymentmode(data,amount.toString());
                             }
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Must book for one hours")));
+                          }
+
+
+
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text("please fill all the details")));
@@ -439,7 +469,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         //       bookingforname = "month";
                         //     });
                         //   }
-
+                        //
                         // var data = await  Service().bookturf(
                         //        widget.id,
                         //        dateController.text,
@@ -452,7 +482,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         //    // choosePaymentmode(data);
                         //     choosePaymentmode(data);
                         //   }
-                        //}
+                        // }
                         // choosePaymentmode();
                         // Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookingScreen(),));
                       },

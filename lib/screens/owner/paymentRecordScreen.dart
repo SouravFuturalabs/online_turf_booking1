@@ -1,4 +1,7 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:online_turf_booking/controller/apis.dart';
 
 import '../../utilites/appconstants.dart';
 
@@ -29,20 +32,39 @@ class _PaymentRecordScreenState extends State<PaymentRecordScreen> {
                 ),
               ),
               Expanded(
-                child: ListView.builder(itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: AppConstants.primarycolors, width: 2)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text("payment 1"),
-                      ),
-                    ),
-                  );
-                }),
+                child: FutureBuilder(
+                  future: Service().paymenthistory(),
+                  builder: (context,sapshot) {
+                    if (sapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppConstants.primarycolors,
+                        ),
+                      );
+                    }
+                    if(sapshot.hasData){
+                      return ListView.builder(itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: AppConstants.primarycolors, width: 2)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("payment 1"),
+                            ),
+                          ),
+                        );
+                      }); 
+                    }else{
+                      return Center(
+                        child: Text("No payment history"),
+                      );
+                    }
+                    
+                  }
+                ),
               )
             ],
           ),

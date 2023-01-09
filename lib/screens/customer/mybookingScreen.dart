@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:online_turf_booking/controller/apis.dart';
+import 'package:online_turf_booking/screens/customer/viewBookedSingleTurfDetails.dart';
 import 'package:online_turf_booking/utilites/appconstants.dart';
+
+import 'singleTurfDetails.dart';
 
 class MybookingScreen extends StatefulWidget {
   const MybookingScreen({Key? key}) : super(key: key);
@@ -76,6 +79,7 @@ class _MybookingScreenState extends State<MybookingScreen> {
                                                     top: 1.0),
                                                 child: InkWell(
                                                   onTap: () {
+                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookedSingleTurfDetails(id: snapshot.data[index]["Turf_id"],tym: snapshot.data[index]["time_slot"].toString(),date:snapshot.data[index]["bdate"] ,),));
                                                     // final valid = formKey.currentState!.validate();
                                                   },
                                                   child: Container(
@@ -115,7 +119,15 @@ class _MybookingScreenState extends State<MybookingScreen> {
                                                 padding: const EdgeInsets.only(
                                                     top: 18.0),
                                                 child: InkWell(
-                                                  onTap: () {
+                                                  onTap: ()async {
+                                                  var response = await  Service().cancelbooking(snapshot.data[index]["Book_id"]);
+                                                  if(response["message"] == "sucess"){
+                                                    setState(() {
+
+                                                    });
+                                                  }else{
+                                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Somthing went wrong")));
+                                                  }
                                                     // final valid = formKey.currentState!.validate();
                                                   },
                                                   child: Container(
