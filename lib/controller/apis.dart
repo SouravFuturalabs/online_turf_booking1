@@ -438,6 +438,71 @@ class Service {
     }
   }
 
+  updateTurf(
+      String tname,
+      tlocation,
+      accountnum,
+      ownername,
+
+      String email,
+      String phone,
+
+      String password,
+      String rateperhours,
+      String oldemailid,
+      BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    final fullurl = "${url}update_turf.php";
+    var body = {
+      "Turf_id":id,
+      "Turf_name":tname,
+      "Turf_location":tlocation,
+      "owner_acc":accountnum,
+      "owner_name":ownername,
+      "Owner_email":email,
+      "Owner_emailold":oldemailid,
+      "owner_ph":phone,
+      "password":password,
+      "rate":rateperhours
+    };
+
+    var response = await post(Uri.parse("${url}update_turf.php"),body: body);
+
+      if (response.statusCode == 200) {
+
+
+        var rbody = jsonDecode(response.body);
+        if (rbody["message"] == "sucess") {
+
+          SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
+          sharedPreferences.setString("id", rbody["Turf_id"]);
+          sharedPreferences.setString("name", rbody["Turf_name"]);
+          sharedPreferences.setString("email", rbody["Owner_email"]);
+          sharedPreferences.setString("type", rbody["user_type"]);
+          sharedPreferences.setString("url", url);
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Profile Updated")));
+          Navigator.of(context).pushAndRemoveUntil(
+            // the new route
+            MaterialPageRoute(
+              builder: (BuildContext context) => OwnerHomeScreen(),
+            ),
+
+                (Route route) => false,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Somthing went wrong please try again")));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Somthing went wrong please try again")));
+      }
+
+  }
+
 
 
 }

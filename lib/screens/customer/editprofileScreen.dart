@@ -147,6 +147,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       phoneController.text = response["CPhone_no"];
       dobController.text = response["Cdob"];
       addressController.text = response["Caddress"];
+      passwordController.text = response["password"];
+
       oldemail = response["Caddress"];
     });
     print(response);
@@ -249,6 +251,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               color: AppConstants.primarycolors, width: 2),
                         ),
                         hintText: "Name",
+                        labelText: "Name",
+                        labelStyle: TextStyle(
+                            color: AppConstants.primarycolors,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
                         hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: 17,
@@ -290,6 +297,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               color: AppConstants.primarycolors, width: 2),
                         ),
                         hintText: "Phone number",
+                        labelText: "Phone number",
+                        labelStyle: TextStyle(
+                            color: AppConstants.primarycolors,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
                         hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: 17,
@@ -332,6 +344,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               color: AppConstants.primarycolors, width: 2),
                         ),
                         hintText: "DOB",
+                        labelText: "DOB",
+                        labelStyle: TextStyle(
+                            color: AppConstants.primarycolors,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
+
                         hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: 17,
@@ -370,6 +388,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               color: AppConstants.primarycolors, width: 2),
                         ),
                         hintText: "E-mail",
+                        labelText: "E-mail",
+                        labelStyle: TextStyle(
+                            color: AppConstants.primarycolors,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
                         hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: 17,
@@ -410,6 +433,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               color: AppConstants.primarycolors, width: 2),
                         ),
                         hintText: "Address",
+                        labelText: "Address",
+                        labelStyle: TextStyle(
+                            color: AppConstants.primarycolors,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
                         hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: 17,
@@ -472,6 +500,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               ),
                         hintText: "Password",
+                        labelText: "Password",
+                        labelStyle: TextStyle(
+                            color: AppConstants.primarycolors,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
                         hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: 17,

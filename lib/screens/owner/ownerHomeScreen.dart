@@ -25,11 +25,15 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
   String? id;
   String? email;
   String? fnamelatter;
+  String? url;
   getdetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
+    // var id = await sharedPreferences.getString("id");
+
     type = await sharedPreferences.getString("type");
     name = await sharedPreferences.getString("name");
+    url = await sharedPreferences.getString("url");
     if (name!.length >= 3) {
       fnamelatter = name!.substring(0, 1).toString();
     } else {
@@ -181,17 +185,45 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("assets/truf.png"),
-                          fit: BoxFit.cover),
-                      border: Border.all(
-                          color: AppConstants.primarycolors, width: 2)),
-                ),
+              FutureBuilder(
+                future: Service().getSingleTurfDetails(id!),
+                builder: (context,snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppConstants.primarycolors,
+                      ),
+                    );
+                  }
+                  if(snapshot.hasData){
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image:NetworkImage("${url!.split("API/").first.toString()}Img/${snapshot.data["image"]}"),
+                                fit: BoxFit.cover),
+                            border: Border.all(
+                                color: AppConstants.primarycolors, width: 2)),
+                      ),
+                    );
+                  }else{
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("assets/truf.png"),
+                                fit: BoxFit.cover),
+                            border: Border.all(
+                                color: AppConstants.primarycolors, width: 2)),
+                      ),
+                    );
+                  }
+
+                }
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),

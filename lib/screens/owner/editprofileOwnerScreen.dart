@@ -30,6 +30,8 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
 
   String alredyimage = "null";
   String alredylice = "null";
+  bool isPasswordVisible = true;
+  String? oldmail;
 
   getdetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -40,9 +42,11 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
       turflocationController.text = details["Turf_location"];
       accountController.text = details["owner_acc"];
       nameController.text = details["owner_name"];
+      oldmail = details["Owner_email"];
       emailController.text = details["Owner_email"];
       phoneController.text = details["owner_ph"];
       rateperhourController.text = details["rate"];
+      passwordController.text = details["password"];
       alredyimage = details["image"];
       alredylice = details["licence"];
     });
@@ -315,6 +319,11 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Name",
+                          labelText: "Name",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -357,6 +366,11 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Phone number",
+                          labelText: "Phone number",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -366,7 +380,7 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      controller: emailController,
+                      controller: turflocationController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter the email";
@@ -395,6 +409,11 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "E-mail",
+                          labelText: "E-mail",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -433,6 +452,11 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Account number",
+                          labelText: "Account number",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -452,6 +476,7 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                           color: Colors.black,
                           fontSize: 17,
                           fontWeight: FontWeight.w500),
+                      obscureText: isPasswordVisible,
                       decoration: InputDecoration(
                           errorStyle: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w500),
@@ -471,6 +496,34 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Password",
+                          labelText: "Password",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                          suffixIcon: isPasswordVisible == true
+                              ? InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isPasswordVisible = false;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.visibility,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              : InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isPasswordVisible = true;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.visibility_off,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -518,6 +571,11 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Turf Name",
+                          labelText: "Turf Name",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -564,6 +622,11 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Location",
+                          labelText: "Location",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -611,118 +674,125 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Rate per hours",
+                          labelText: "Rate per hours",
+                          labelStyle: TextStyle(
+                              color: AppConstants.primarycolors,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
                               fontWeight: FontWeight.w500)),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Upload Documents",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        picklicences();
-                      },
-                      child: Container(
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width - 80,
-                                child: Text(
-                                  license == null
-                                      ? "license"
-                                      : license!.path
-                                          .toString()
-                                          .substring(51, 80),
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 18),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.document_scanner,
-                                color: Colors.grey,
-                              ),
-                            )
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: AppConstants.primarycolors, width: 2)),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        pickimage();
-                      },
-                      child: Container(
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width - 80,
-                                child: Text(
-                                  pickedImage == null
-                                      ? "image"
-                                      : pickedImage!.path
-                                          .toString()
-                                          .substring(51, 80),
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 18),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Icon(
-                                    Icons.document_scanner,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: AppConstants.primarycolors, width: 2)),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: Text(
+                  //     "Upload Documents",
+                  //     style:
+                  //         TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  //     textAlign: TextAlign.center,
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: InkWell(
+                  //     onTap: () {
+                  //       picklicences();
+                  //     },
+                  //     child: Container(
+                  //       height: 50,
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Padding(
+                  //             padding: const EdgeInsets.all(8.0),
+                  //             child: Container(
+                  //               width: MediaQuery.of(context).size.width - 80,
+                  //               child: Text(
+                  //                 license == null
+                  //                     ? "license"
+                  //                     : license!.path
+                  //                         .toString()
+                  //                         .substring(51, 80),
+                  //                 style: TextStyle(
+                  //                     color: Colors.grey, fontSize: 18),
+                  //                 overflow: TextOverflow.ellipsis,
+                  //                 maxLines: 1,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding: const EdgeInsets.all(8.0),
+                  //             child: Icon(
+                  //               Icons.document_scanner,
+                  //               color: Colors.grey,
+                  //             ),
+                  //           )
+                  //         ],
+                  //       ),
+                  //       decoration: BoxDecoration(
+                  //           border: Border.all(
+                  //               color: AppConstants.primarycolors, width: 2)),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: InkWell(
+                  //     onTap: () {
+                  //       pickimage();
+                  //     },
+                  //     child: Container(
+                  //       height: 50,
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Padding(
+                  //             padding: EdgeInsets.all(8.0),
+                  //             child: Container(
+                  //               width: MediaQuery.of(context).size.width - 80,
+                  //               child: Text(
+                  //                 pickedImage == null
+                  //                     ? "image"
+                  //                     : pickedImage!.path
+                  //                         .toString()
+                  //                         .substring(51, 80),
+                  //                 style: TextStyle(
+                  //                     color: Colors.grey, fontSize: 18),
+                  //                 overflow: TextOverflow.ellipsis,
+                  //                 maxLines: 1,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Expanded(
+                  //             child: Padding(
+                  //               padding: EdgeInsets.all(8.0),
+                  //               child: InkWell(
+                  //                 onTap: () {},
+                  //                 child: Icon(
+                  //                   Icons.document_scanner,
+                  //                   color: Colors.grey,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           )
+                  //         ],
+                  //       ),
+                  //       decoration: BoxDecoration(
+                  //           border: Border.all(
+                  //               color: AppConstants.primarycolors, width: 2)),
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 18.0),
                     child: InkWell(
                       onTap: () {
                         final valid = formKey.currentState!.validate();
-                        if (valid == true) {}
+                        if (valid == true) {
+                          Service().updateTurf(turfnameContoler.text, turflocationController.text, accountController.text, nameController.text, emailController.text, phoneController.text, passwordController.text, rateperhourController.text, oldmail!, context);
+                        }
                       },
                       child: Container(
                         height: 40,
@@ -741,7 +811,7 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                                 BorderRadius.all(Radius.circular(20))),
                         child: Center(
                           child: Text(
-                            "Register",
+                            "Update",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
