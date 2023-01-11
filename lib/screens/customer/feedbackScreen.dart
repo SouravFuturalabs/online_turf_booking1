@@ -86,6 +86,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                               onChanged: (newValue) {
                                 setState(() {
                                   selectedturf = newValue;
+                                  print(selectedturf);
                                 });
                               },
                               items: turfs.map((location) {

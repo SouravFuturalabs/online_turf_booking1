@@ -303,6 +303,7 @@ class Service {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = await sharedPreferences.getString("id");
     var body = {"Turf_id": turfid, "Cid": id, "Feedback": feedback};
+    print(body);
     var response = await post(Uri.parse("${url}ins_feedback.php"), body: body);
 
     if (response.statusCode == 200) {
@@ -322,6 +323,7 @@ class Service {
     var body = {"Cid": id};
     var response = await post(Uri.parse("${url}view_book.php"), body: body);
     if (response.statusCode == 200) {
+      print(response.body);
       var rbody = jsonDecode(response.body);
       if (rbody[0]["message"] != "failed") {
         return rbody;
@@ -331,7 +333,7 @@ class Service {
   }
 
   Future<dynamic> cancelbooking(String bookid) async {
-    var body = {"Book_id": bookid};
+    var body = {"Book_id": bookid,"Book_status":"cancel"};
     var response = await post(Uri.parse("${url}update_book.php"), body: body);
     if (response.statusCode == 200) {
       var rbody = jsonDecode(response.body);
@@ -501,6 +503,29 @@ class Service {
             SnackBar(content: Text("Somthing went wrong please try again")));
       }
 
+  }
+
+
+  Future<dynamic> viewFeedback() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var id = await sharedPreferences.getString("id");
+    var body = {
+      "Turf_id":id,
+
+    };
+    var response = await post(Uri.parse("${url}view_feedback.php"), body: body);
+
+    if (response.statusCode == 200) {
+      print("feedback    ----${response.body}");
+      print("feedback    ----${id}");
+      var rbody = jsonDecode(response.body);
+      print(rbody);
+      if (rbody[0]["message"] != "failed") {
+        return rbody;
+      }
+
+
+    }
   }
 
 

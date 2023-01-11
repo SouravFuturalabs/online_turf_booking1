@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:online_turf_booking/controller/apis.dart';
 import 'package:online_turf_booking/screens/notificationScreen.dart';
 import 'package:online_turf_booking/screens/owner/turfBookHistoryScreen.dart';
+import 'package:online_turf_booking/screens/owner/viewFeedbackScreen.dart';
 import 'package:online_turf_booking/screens/settingsScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -121,7 +122,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                 trailing: Icon(Icons.feedback),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => NotificationScreen(),
+                    builder: (context) => ViewFeedBackScreen(),
                   ));
                 },
               ),
