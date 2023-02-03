@@ -294,7 +294,11 @@ class Service {
     var response = await get(Uri.parse("${url}view_notification.php"));
     if (response.statusCode == 200) {
       print(response.body);
-      return jsonDecode(response.body);
+      var rbody= jsonDecode(response.body);
+      if(rbody[0]["message"] !="failed"){
+        return jsonDecode(response.body);
+      }
+
     }
   }
 
@@ -468,6 +472,8 @@ class Service {
       "password":password,
       "rate":rateperhours
     };
+
+    print(body);
 
     var response = await post(Uri.parse("${url}update_turf.php"),body: body);
 

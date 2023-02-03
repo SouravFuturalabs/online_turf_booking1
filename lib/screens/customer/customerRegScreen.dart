@@ -28,7 +28,7 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
     DateTime? date = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2021),
+        firstDate: DateTime(1800),
         lastDate: DateTime(2025));
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String formatted = formatter.format(date!);

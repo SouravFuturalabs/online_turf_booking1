@@ -42,7 +42,7 @@ class _BookedSingleTurfDetailsState extends State<BookedSingleTurfDetails> {
       body: SafeArea(
           child: Center(
         child: FutureBuilder(
-            future: Service().getSingleTurfDetails("5"),
+            future: Service().getSingleTurfDetails(widget.id),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(

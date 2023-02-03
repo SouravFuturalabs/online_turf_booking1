@@ -382,6 +382,8 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: accountController,
+                      keyboardType: TextInputType.number
+                      ,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter the account number";
