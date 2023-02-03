@@ -66,7 +66,9 @@ class _MybookingScreenState extends State<MybookingScreen> {
                                               Text(
                                                   "Date : ${snapshot.data[index]["bdate"]}"),
                                               Text(
-                                                  "Time : ${snapshot.data[index]["time_slot"].toString().split(" ").first} to ${snapshot.data[index]["time_slot"].toString().split(" ").last}")
+                                                  "Time : ${snapshot.data[index]["time_slot"].toString().split(" ").first} to ${snapshot.data[index]["time_slot"].toString().split(" ").last}"),
+                                              Text(
+                                                  "BookStatus : ${snapshot.data[index]["Book_status"]}"),
                                             ],
                                           ),
                                         ),
