@@ -380,7 +380,7 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      controller: turflocationController,
+                      controller: emailController,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter the email";
