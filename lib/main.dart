@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:online_turf_booking/screens/customer/customerHomeScreen.dart';
 import 'package:online_turf_booking/screens/loginscreen.dart';
 import 'package:online_turf_booking/screens/owner/ownerHomeScreen.dart';
+import 'package:online_turf_booking/screens/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -26,11 +27,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: type == "customer"
-          ? CustomerHomeScreen()
+          ? SplashScreen(Type: "customer",)
           : type == "turf"
-              ? OwnerHomeScreen()
+              ? SplashScreen(Type: "turf",)
               : type == "null"
-                  ? LoginScreen()
+                  ? SplashScreen(Type: "null",)
                   : LoginScreen(),
     );
   }
