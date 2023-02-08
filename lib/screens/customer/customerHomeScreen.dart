@@ -27,6 +27,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   String? id;
   String? email;
   String? fnamelatter;
+
+  List searchedList =[];
+
+  TextEditingController searchController = TextEditingController();
   getdetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -182,43 +186,89 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    //controller: nameController,
+              SizedBox(
+                height: 60,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width/1.4,
 
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500),
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        contentPadding: EdgeInsets.only(top: 5),
-                        errorStyle: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w500),
-                        errorBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.red, width: 2)),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: AppConstants.primarycolors, width: 2),
+                        child: TextFormField(
+                          controller: searchController,
+
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              contentPadding: EdgeInsets.only(top: 5),
+                              errorStyle: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w500),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 2)),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppConstants.primarycolors, width: 2),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppConstants.primarycolors, width: 2),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppConstants.primarycolors, width: 2),
+                              ),
+                              hintText: "Search",
+                              hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500)),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: AppConstants.primarycolors, width: 2),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0.0),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            //width: 190,
+                            decoration: BoxDecoration(
+                                color: AppConstants.primarycolors,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(4, 4),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                  )
+                                ],
+                                borderRadius: BorderRadius.all(Radius.circular(20))),
+                            child: Center(
+                              child: Text(
+                                "Search",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: AppConstants.primarycolors, width: 2),
-                        ),
-                        hintText: "Search",
-                        hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500)),
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               FutureBuilder(
@@ -232,7 +282,18 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                       );
                     }
                     if (snapshot.hasData) {
-                      return Expanded(
+                      searchedList.clear();
+                      snapshot.data.forEach((element){
+                        if(element["Turf_name"].contains(searchController.text)){
+                          searchedList.add(element);
+
+                        }
+                        print(element["Turf_name"]);
+                        //print(searchedList);
+                      });
+                    // searchedList = snapshot.data.where((value)=> value["Turf_name"].contain(searchController.text)).toList();
+                    print(" searchde  ${searchedList}");
+                      return searchController.text.isEmpty ? Expanded(
                         child: GridView.builder(
                             itemCount: snapshot.data.length,
                             gridDelegate:
@@ -241,6 +302,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                                     crossAxisSpacing: 20,
                                     mainAxisSpacing: 20),
                             itemBuilder: (context, index) {
+
                               return InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -270,6 +332,54 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                                       ),
                                       Text(
                                         snapshot.data[index]["Turf_name"],
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                      ): Expanded(
+                        child: GridView.builder(
+                            itemCount: searchedList.length,
+                            gridDelegate:
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 20),
+                            itemBuilder: (context, index) {
+
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => SingleTurfDetails(
+                                      id: searchedList[index]["Turf_id"]
+                                          .toString(),
+                                    ),
+                                  ));
+                                },
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                BorderRadius.circular(30),
+                                                image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                        "${url!.split("API/").first.toString()}Img/${searchedList[index]["image"]}"))),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        searchedList[index]["Turf_name"],
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500),

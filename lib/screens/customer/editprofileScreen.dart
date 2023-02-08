@@ -141,6 +141,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   getdetails() async {
     var response = await Service().getCustomerdetails();
+    print(" rrrrrrr------${response}");
     setState(() {
       nameController.text = response["Cname"];
       emailController.text = response["CEmail"];
@@ -149,7 +150,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       addressController.text = response["Caddress"];
       passwordController.text = response["password"];
 
-      oldemail = response["Caddress"];
+      oldemail = response["CEmail"];
     });
     print(response);
   }

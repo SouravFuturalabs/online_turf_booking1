@@ -30,6 +30,8 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
 
   bool islicenseCliked = false;
   bool isimageCliked = false;
+  bool isPasswordVisible = true;
+  bool isPasswordVisible1 = true;
 
   getlocation() async {
     Location location = Location();
@@ -422,6 +424,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: passwordController,
+                      obscureText: isPasswordVisible,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter the password";
@@ -450,6 +453,29 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Password",
+                          suffixIcon: isPasswordVisible == true
+                              ? InkWell(
+                            onTap: () {
+                              setState(() {
+                                isPasswordVisible = false;
+                              });
+                            },
+                            child: Icon(
+                              Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                          )
+                              : InkWell(
+                            onTap: () {
+                              setState(() {
+                                isPasswordVisible = true;
+                              });
+                            },
+                            child: Icon(
+                              Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                          ),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -460,6 +486,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       controller: confimPassswordContoller,
+                      obscureText: isPasswordVisible1,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter the confirm password";
@@ -488,6 +515,29 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                                 color: AppConstants.primarycolors, width: 2),
                           ),
                           hintText: "Confirm password",
+                          suffixIcon:  isPasswordVisible1 == true
+                              ? InkWell(
+                            onTap: () {
+                              setState(() {
+                                isPasswordVisible1 = false;
+                              });
+                            },
+                            child: Icon(
+                              Icons.visibility,
+                              color: Colors.grey,
+                            ),
+                          )
+                              : InkWell(
+                            onTap: () {
+                              setState(() {
+                                isPasswordVisible1 = true;
+                              });
+                            },
+                            child: Icon(
+                              Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                          ),
                           hintStyle: TextStyle(
                               color: Colors.grey,
                               fontSize: 17,
@@ -717,12 +767,9 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: Icon(
-                                    Icons.document_scanner,
-                                    color: Colors.grey,
-                                  ),
+                                child: Icon(
+                                  Icons.document_scanner,
+                                  color: Colors.grey,
                                 ),
                               ),
                             )

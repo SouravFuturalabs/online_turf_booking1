@@ -11,7 +11,7 @@ import '../screens/customer/editprofileScreen.dart';
 import '../screens/owner/ownerHomeScreen.dart';
 
 class Service {
-  String url = "http://192.168.29.86/OnlineTurffManagement/API/";
+  String url = "http://192.168.68.151/OnlineTurffManagement/API/";
 
   login(String username, password, BuildContext context) async {
     var body = {"uname": username, "password": password};
@@ -131,9 +131,9 @@ class Service {
         filename: image!.path));
     request.fields["Owner_email"] = email;
     request.fields['owner_ph'] = phone;
-    request.files.add(MultipartFile.fromBytes(
-        "licence", File(licphoto.path).readAsBytesSync(),
-        filename: licphoto.path));
+    // request.files.add(MultipartFile.fromBytes(
+    //     "licence", File(licphoto.path).readAsBytesSync(),
+    //     filename: licphoto.path));
     request.fields['password'] = password;
     request.fields['rate'] = rateperhours;
 
@@ -153,14 +153,44 @@ class Service {
           sharedPreferences.setString("email", rbody["Owner_email"]);
           sharedPreferences.setString("type", rbody["user_type"]);
           sharedPreferences.setString("url", url);
-          Navigator.of(context).pushAndRemoveUntil(
-            // the new route
-            MaterialPageRoute(
-              builder: (BuildContext context) => LoginScreen(),
-            ),
 
-            (Route route) => false,
-          );
+          ///------------------ lices
+          final fullurl1 = "${url}turf_reg_image.php";
+          var request1 = MultipartRequest("POST", Uri.parse(fullurl1));
+          print( rbody["Turf_id"]);
+          request1.fields["Turf_id"] = rbody["Turf_id"];
+          request1.files.add(MultipartFile.fromBytes(
+              "image", File(licphoto.path).readAsBytesSync(),
+              filename: licphoto.path));
+
+          request1.send().then((responsevalue)async {
+            if(responsevalue.statusCode == 200){
+              final data1 = await Response.fromStream(responsevalue);
+              print(data1.body);
+
+              var rbody1 = jsonDecode(data1.body);
+              print(rbody1);
+
+              if(rbody1["message"] == "sucess"){
+                print("2 image Uploaded!");
+
+                Navigator.of(context).pushAndRemoveUntil(
+                  // the new route
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => LoginScreen(),
+                  ),
+
+                      (Route route) => false,
+                );
+              }
+
+            }
+          });
+
+
+
+
+
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Somthing went wrong please try again")));
@@ -216,7 +246,7 @@ class Service {
     var body = {
       "Cid": id,
       "Cname": name,
-      "CEmail": "hj",
+      "CEmail": oldemail,
       "Caddress": addresss,
       "Cdob": dob,
       "CPhone_no": phone,
@@ -224,13 +254,18 @@ class Service {
       "password": passord
     };
 
-    //print(body);
+    print(" body of udate user email ${email}");
+    print(" body of udate user address ${addresss}");
+    print(" body of udate user email ${oldemail}");
+    print(" body of udate user email ${passord}");
+    print(" body of udate user email ${body}");
 
     var response = await post(Uri.parse("${url}update_cust.php"), body: body);
     if (response.statusCode == 200) {
+      print(response.body);
       var rbody = jsonDecode(response.body);
       if (rbody["message"] == "sucess") {
-        print(response.body);
+        print(" resssponse    ----${response.body}");
         sharedPreferences.setString("name", rbody["Cname"]);
         sharedPreferences.setString("email", rbody["CEmail"]);
 
