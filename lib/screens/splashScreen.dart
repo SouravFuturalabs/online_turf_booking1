@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:online_turf_booking/utilites/appconstants.dart';
 
 import 'customer/customerHomeScreen.dart';
 import 'loginscreen.dart';
 import 'owner/ownerHomeScreen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SplashScreen extends StatefulWidget {
   String Type;
@@ -63,11 +65,21 @@ class _SplashScreenState extends State<SplashScreen> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
-        child: Center(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height/5,
-              width: MediaQuery.of(context).size.height/2.5,
-              child: Image.asset("assets/logo.jpg")),//Image.asset("assets/logo.jpg")
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height/5,
+                  width: MediaQuery.of(context).size.height/2.5,
+                  child: Image.asset("assets/logo.jpg")),//Image.asset("assets/logo.jpg")
+            ),
+            SizedBox(
+              height: 80,
+                width: 80,
+                child: SpinKitSpinningLines(color: AppConstants.primarycolors,))
+
+          ],
         ),
       ),
     );
