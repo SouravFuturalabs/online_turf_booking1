@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:online_turf_booking/controller/apis.dart';
 import 'package:online_turf_booking/utilites/appconstants.dart';
 
@@ -277,6 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           InkWell(
                             onTap: () {
+                              //EasyLoading.show(status: 'loading...');
                               customerOrowner();
                             },
                             child: Text(

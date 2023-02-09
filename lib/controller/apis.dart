@@ -12,7 +12,7 @@ import '../screens/customer/editprofileScreen.dart';
 import '../screens/owner/ownerHomeScreen.dart';
 
 class Service {
-  String url = "http://192.168.68.151/OnlineTurffManagement/API/";
+  String url = "http://192.168.29.86/OnlineTurffManagement/API/";
 
   login(String username, password, BuildContext context) async {
     var body = {"uname": username, "password": password};
@@ -121,6 +121,7 @@ class Service {
       String password,
       String rateperhours,
       BuildContext context) async {
+    EasyLoading.show(status: 'loading...');
     final fullurl = "${url}turf_reg.php";
     var request = MultipartRequest("POST", Uri.parse(fullurl));
     request.fields["Turf_name"] = tname;
@@ -140,7 +141,7 @@ class Service {
 
     //var response =await request.send();
 
-    EasyLoading.show(status: 'loading...');
+
     request.send().then((response) async {
       if (response.statusCode == 200) {
         print("Uploaded!");

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:online_turf_booking/controller/apis.dart';
@@ -791,6 +792,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                               passwordController.text) {
                             if (islicenseCliked == true &&
                                 isimageCliked == true) {
+                              //EasyLoading.show(status: 'loading...');
                               Service().turfReg(
                                   turfnameContoler.text,
                                   turflocationController.text,

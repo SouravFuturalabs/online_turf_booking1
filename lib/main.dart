@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
               : type == "null"
                   ? SplashScreen(Type: "null",)
                   : LoginScreen(),
+      builder: EasyLoading.init(),
     );
   }
 }
