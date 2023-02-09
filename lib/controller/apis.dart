@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:online_turf_booking/screens/loginscreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -138,6 +139,8 @@ class Service {
     request.fields['rate'] = rateperhours;
 
     //var response =await request.send();
+
+    EasyLoading.show(status: 'loading...');
     request.send().then((response) async {
       if (response.statusCode == 200) {
         print("Uploaded!");
@@ -172,6 +175,9 @@ class Service {
               print(rbody1);
 
               if(rbody1["message"] == "sucess"){
+
+                ///---------------------- eassy loading
+                EasyLoading.dismiss();
                 print("2 image Uploaded!");
 
                 Navigator.of(context).pushAndRemoveUntil(
@@ -200,6 +206,8 @@ class Service {
             SnackBar(content: Text("Somthing went wrong please try again")));
       }
     });
+
+    EasyLoading.dismiss();
   }
 
   Future<dynamic> getfullturfdeatils() async {
