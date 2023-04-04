@@ -82,8 +82,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (ctx) => OwnerReqScreen()));
+                   Navigator.of(context).pop;
                   },
                   child: Container(
                     height: 40,

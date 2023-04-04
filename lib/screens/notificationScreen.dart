@@ -51,10 +51,48 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       border: Border.all(
                                           color: AppConstants.primarycolors,
                                           width: 2)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                        snapshot.data[index]["Notification"]),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:8.0,right: 8,top:8),
+                                        child: Row(children: [
+                                          Text("Tutf : "),
+                                          Text(snapshot.data[index]["Turf_name"])
+                                        ],),
+                                      ),
+                                       Padding(
+                                        padding: const EdgeInsets.only(left:8.0,right: 8),
+                                        child: Row(children: [
+                                          Text("phone : "),
+                                          Text(snapshot.data[index]["owner_ph"])
+                                        ],),
+                                      ),
+                                       Padding(
+                                        padding: const EdgeInsets.only(left:8.0,right: 8),
+                                        child: Row(children: [
+                                          Text("Location : "),
+                                          Text(snapshot.data[index]["Turf_location"])
+                                        ],),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:8.0,right: 8),
+                                        child: Row(
+                                          children: [
+                                            Text("Notification"),
+                                          ],
+                                        ),
+                                      ),
+                                      
+                                      Padding(
+                                        padding: const EdgeInsets.only(left:8.0,right: 8),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                                snapshot.data[index]["Notification"]),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               );

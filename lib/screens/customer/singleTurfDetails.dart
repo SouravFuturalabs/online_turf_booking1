@@ -36,12 +36,14 @@ class _SingleTurfDetailsState extends State<SingleTurfDetails> {
     email = await sharedPreferences.getString("email");
     setState(() {});
   }
+
   @override
   void initState() {
     // TODO: implement initState
     getdetails();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,9 +211,16 @@ class _SingleTurfDetailsState extends State<SingleTurfDetails> {
                       padding: const EdgeInsets.only(top: 18.0),
                       child: InkWell(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => BookingScreen(rate: snapshot.data["rate"],id: snapshot.data["Turf_id"]),
-                          ));
+                          if (snapshot.data["truf_available"] == "false") {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Turf under maintenance")));
+                          } else {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => BookingScreen(
+                                  rate: snapshot.data["rate"],
+                                  id: snapshot.data["Turf_id"]),
+                            ));
+                          }
                         },
                         child: Container(
                           height: 40,

@@ -248,6 +248,109 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
     );
   }
 
+  File? pickedOwnerPhoto;
+  bool isOwnerPhotoClicked =false;
+  pickOwnerPhoto() async {
+    ImagePicker imagePicker = ImagePicker();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Pick Image From"),
+          content: Container(
+            height: 100,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    XFile? image = await imagePicker.pickImage(
+                        source: ImageSource.gallery);
+
+                    if (image != null) {
+                      setState(() {
+                        pickedOwnerPhoto = File(image.path);
+                        isOwnerPhotoClicked = true;
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 190,
+                    decoration: BoxDecoration(
+                        color: AppConstants.primarycolors,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                          )
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Center(
+                      child: Text(
+                        "Gallery",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                InkWell(
+                  onTap: () async {
+                    XFile? image =
+                        await imagePicker.pickImage(source: ImageSource.camera);
+
+                    if (image != null) {
+                      setState(() {
+                        pickedOwnerPhoto = File(image.path);
+                        isOwnerPhotoClicked = true;
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 190,
+                    decoration: BoxDecoration(
+                        color: AppConstants.primarycolors,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                          )
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Center(
+                      child: Text(
+                        "Camera",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,11 +361,57 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
               key: formKey,
               child: Column(
                 children: [
-                  Text(
+                  SizedBox(
+                    height: 17,
+                  ),
+                   Text(
                     "Register here..",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(
+                    height: 17,
+                  ),
+                  Container(
+                  height: 100,
+                  width: 100,
+                  child: Stack(
+                    children: [
+                      Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            onTap: () {
+                             pickOwnerPhoto();
+                            },
+                            child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                    color: AppConstants.primarycolors,
+                                    shape: BoxShape.circle),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 20,
+                                )),
+                          )),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: pickedOwnerPhoto == null
+                              ? NetworkImage(
+                                  "https://thumbs.dreamstime.com/b/default-avatar-placeholder-profile-icon-male-eps-file-easy-to-edit-default-avatar-placeholder-profile-icon-male-139556753.jpg")
+                              : FileImage(pickedOwnerPhoto!) as ImageProvider<Object>,
+                          fit: BoxFit.cover),
+                      border: Border.all(
+                          color: AppConstants.primarycolors, width: 2)),
+                ),
+                SizedBox(
+                    height: 17,
+                  ),
+                 
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
@@ -791,9 +940,9 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                           if (confimPassswordContoller.text ==
                               passwordController.text) {
                             if (islicenseCliked == true &&
-                                isimageCliked == true) {
+                                isimageCliked == true && isOwnerPhotoClicked == true) {
                               //EasyLoading.show(status: 'loading...');
-                              Service().turfReg(
+                              Service().turfRegNew(
                                   turfnameContoler.text,
                                   turflocationController.text,
                                   accountController.text,
@@ -804,6 +953,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                                   license!,
                                   passwordController.text,
                                   rateperhourController.text,
+                                  pickedOwnerPhoto!,
                                 context
                               );
                               // Navigator.of(context).push(MaterialPageRoute(
@@ -813,7 +963,7 @@ class _OwnerReqScreenState extends State<OwnerReqScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                       content: Text(
-                                          "please upload license and image")));
+                                          "please upload license,turf image, owner Photo")));
                             }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

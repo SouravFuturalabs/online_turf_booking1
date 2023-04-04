@@ -138,6 +138,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   bool isPasswordVisible = true;
   String? oldemail;
+  String customerphoto="";
 
   getdetails() async {
     var response = await Service().getCustomerdetails();
@@ -149,6 +150,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       dobController.text = response["Cdob"];
       addressController.text = response["Caddress"];
       passwordController.text = response["password"];
+      customerphoto=response["customer_photo"];
 
       oldemail = response["CEmail"];
     });
@@ -184,6 +186,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
+                ),
+                  Container(
+                  height: 150,
+                  width: 150,
+                  child: Stack(
+                    children: [
+                      // Align(
+                      //     alignment: Alignment.bottomRight,
+                      //     child: InkWell(
+                      //       onTap: () {
+                      //         pickimage();
+                      //       },
+                      //       child: Container(
+                      //           height: 50,
+                      //           width: 50,
+                      //           decoration: BoxDecoration(
+                      //               color: AppConstants.primarycolors,
+                      //               shape: BoxShape.circle),
+                      //           child: Icon(
+                      //             Icons.edit,
+                      //             color: Colors.white,
+                      //           )),
+                      //     )),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: pickedImage == null
+                              ? NetworkImage(
+                                  "${Service().url!.split("API/").first.toString()}Img/${customerphoto}")
+                              : FileImage(pickedImage!) as ImageProvider<Object>,
+                          fit: BoxFit.cover),
+                      border: Border.all(
+                          color: AppConstants.primarycolors, width: 2)),
                 ),
                 // Container(
                 //   height: 150,
