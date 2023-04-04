@@ -43,6 +43,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
 
     id = await sharedPreferences.getString("id");
     email = await sharedPreferences.getString("email");
+    getTurfdeails();
     setState(() {});
   }
 
@@ -50,7 +51,25 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
   void initState() {
     // TODO: implement initState
     getdetails();
+    
     super.initState();
+  }
+
+  bool turfAvilableStatus=false;
+
+  getTurfdeails()async{
+    var response =await  Service().getSingleTurfDetails(id!);
+    if(response["truf_available"]== "true"){
+      setState(() {
+        turfAvilableStatus = true;
+      });
+    }
+    else{
+      setState(() {
+        turfAvilableStatus = false;
+      });
+    }
+    
   }
 
   @override
@@ -96,15 +115,45 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                 },
               ),
             ),
-            // Card(
-            //   child: ListTile(
-            //     title: Text("Report"),
-            //     trailing: Icon(Icons.report),
-            //     onTap: () {
-            //       // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MybookingScreen(),));
-            //     },
-            //   ),
-            // ),
+            Card(
+              child: ListTile(
+                title: Text("Maintenance"),
+                trailing: Switch(
+                  onChanged: (value)async {
+                    if( turfAvilableStatus == true){
+                   var response =  await Service().chnageTurfStatus(id!, "false");
+                   print(">>>>>>>>>___${response}");
+                   if(response["message"]=="sucess"){
+                    getTurfdeails();
+                    // setState(() {
+                    //   turfAvilableStatus == false;
+                    // });
+                   }
+
+                    }
+                      if( turfAvilableStatus == false){
+                   var response =  await Service().chnageTurfStatus(id!, "true");
+                    if(response["message"]=="sucess"){
+                      getTurfdeails();
+                    // setState(() {
+                    //   turfAvilableStatus == true;
+                    // });
+                   }
+
+                    }
+
+
+
+
+                  },
+                  value: turfAvilableStatus,
+                  activeColor: AppConstants.primarycolors,
+                ),
+                onTap: () {
+                  // Navigator.of(context).push(MaterialPageRoute(builder: (context) => MybookingScreen(),));
+                },
+              ),
+            ),
             Card(
               child: ListTile(
                 title: Text("Add Notification"),
@@ -187,45 +236,44 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                 ),
               ),
               FutureBuilder(
-                future: Service().getSingleTurfDetails(id!),
-                builder: (context,snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: AppConstants.primarycolors,
-                      ),
-                    );
-                  }
-                  if(snapshot.hasData){
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image:NetworkImage("${url!.split("API/").first.toString()}Img/${snapshot.data["image"]}"),
-                                fit: BoxFit.cover),
-                            border: Border.all(
-                                color: AppConstants.primarycolors, width: 2)),
-                      ),
-                    );
-                  }else{
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage("assets/truf.png"),
-                                fit: BoxFit.cover),
-                            border: Border.all(
-                                color: AppConstants.primarycolors, width: 2)),
-                      ),
-                    );
-                  }
-
-                }
-              ),
+                  future: Service().getSingleTurfDetails(id!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppConstants.primarycolors,
+                        ),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      "${url!.split("API/").first.toString()}Img/${snapshot.data["image"]}"),
+                                  fit: BoxFit.cover),
+                              border: Border.all(
+                                  color: AppConstants.primarycolors, width: 2)),
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage("assets/truf.png"),
+                                  fit: BoxFit.cover),
+                              border: Border.all(
+                                  color: AppConstants.primarycolors, width: 2)),
+                        ),
+                      );
+                    }
+                  }),
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(

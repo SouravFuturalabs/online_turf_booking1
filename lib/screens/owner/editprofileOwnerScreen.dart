@@ -32,11 +32,13 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
   String alredylice = "null";
   bool isPasswordVisible = true;
   String? oldmail;
+  String ownerPhoto ="";
 
   getdetails() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var id = await sharedPreferences.getString("id");
     var details = await Service().getSingleTurfDetails(id!);
+    print("turf details ${details}");
     setState(() {
       turfnameContoler.text = details["Turf_name"];
       turflocationController.text = details["Turf_location"];
@@ -49,6 +51,7 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
       passwordController.text = details["password"];
       alredyimage = details["image"];
       alredylice = details["licence"];
+      ownerPhoto = details["owner_photo"];
     });
   }
 
@@ -287,6 +290,41 @@ class _EditProfileOnwerScreenState extends State<EditProfileOnwerScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  Container(
+                  height: 150,
+                  width: 150,
+                  child: Stack(
+                    children: [
+                      // Align(
+                      //     alignment: Alignment.bottomRight,
+                      //     child: InkWell(
+                      //       onTap: () {
+                      //         pickimage();
+                      //       },
+                      //       child: Container(
+                      //           height: 50,
+                      //           width: 50,
+                      //           decoration: BoxDecoration(
+                      //               color: AppConstants.primarycolors,
+                      //               shape: BoxShape.circle),
+                      //           child: Icon(
+                      //             Icons.edit,
+                      //             color: Colors.white,
+                      //           )),
+                      //     )),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: pickedImage == null
+                              ? NetworkImage(
+                                  "${Service().url!.split("API/").first.toString()}Img/${ownerPhoto}")
+                              : FileImage(pickedImage!) as ImageProvider<Object>,
+                          fit: BoxFit.cover),
+                      border: Border.all(
+                          color: AppConstants.primarycolors, width: 2)),
+                ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(

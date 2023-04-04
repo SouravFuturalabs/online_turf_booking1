@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:online_turf_booking/controller/apis.dart';
+import 'package:online_turf_booking/screens/customer/customerHomeScreen.dart';
 
 import '../../utilites/appconstants.dart';
 import 'paymentScreen.dart';
@@ -428,12 +429,29 @@ class _BookingScreenState extends State<BookingScreen> {
                                 dateController.text,
                                 "pending",
                                 "${_fromtime} ${_totime}",
-                                bookingforname);
+                                bookingforname,amount.toString());
 
                             if(data !=null){
+
+                              if(data == "Already booked"){
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text("Turf not available for this timing...")));
+                              }else{
+                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Turf booked successfully, please wait for Turf owner approval")));
+                                 Navigator.of(context).pushAndRemoveUntil(
+                           // the new route
+                           MaterialPageRoute(
+                             builder: (BuildContext context) => CustomerHomeScreen(),
+                           ),
+
+                               (Route route) => false,
+                         );
+                                // choosePaymentmode(data,amount.toString());
+                              }
                               print(data);
                               // choosePaymentmode(data);
-                              choosePaymentmode(data,amount.toString());
+
                             }
                           }else{
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(

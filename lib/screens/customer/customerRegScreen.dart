@@ -39,6 +39,211 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
     });
   }
 
+  File? pickedCustomerPhtot;
+  bool isCustomerPhotoPicked = false;
+  pickCustomerPhoto() async {
+    ImagePicker imagePicker = ImagePicker();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Pick Image From"),
+          content: Container(
+            height: 100,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    XFile? image = await imagePicker.pickImage(
+                        source: ImageSource.gallery);
+
+                    if (image != null) {
+                      setState(() {
+                        pickedCustomerPhtot = File(image.path);
+                        isCustomerPhotoPicked = true;
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 190,
+                    decoration: BoxDecoration(
+                        color: AppConstants.primarycolors,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                          )
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Center(
+                      child: Text(
+                        "Gallery",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                InkWell(
+                  onTap: () async {
+                    XFile? image =
+                        await imagePicker.pickImage(source: ImageSource.camera);
+
+                    if (image != null) {
+                      setState(() {
+                        pickedCustomerPhtot = File(image.path);
+                        isCustomerPhotoPicked = true;
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 190,
+                    decoration: BoxDecoration(
+                        color: AppConstants.primarycolors,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                          )
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Center(
+                      child: Text(
+                        "Camera",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+File? pickedIdProof;
+bool isidproofpicked =false;
+  pickIdProof() async {
+    ImagePicker imagePicker = ImagePicker();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Pick Image From"),
+          content: Container(
+            height: 100,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    XFile? image = await imagePicker.pickImage(
+                        source: ImageSource.gallery);
+
+                    if (image != null) {
+                      setState(() {
+                        pickedIdProof = File(image.path);
+                        isidproofpicked = true;
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 190,
+                    decoration: BoxDecoration(
+                        color: AppConstants.primarycolors,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                          )
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Center(
+                      child: Text(
+                        "Gallery",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                InkWell(
+                  onTap: () async {
+                    XFile? image =
+                        await imagePicker.pickImage(source: ImageSource.camera);
+
+                    if (image != null) {
+                      setState(() {
+                        pickedIdProof = File(image.path);
+                         isidproofpicked= true;
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 190,
+                    decoration: BoxDecoration(
+                        color: AppConstants.primarycolors,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                          )
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Center(
+                      child: Text(
+                        "Camera",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -55,6 +260,45 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                    Container(
+                  height: 100,
+                  width: 100,
+                  child: Stack(
+                    children: [
+                      Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            onTap: () {
+                             pickCustomerPhoto();
+                            },
+                            child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                    color: AppConstants.primarycolors,
+                                    shape: BoxShape.circle),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 20,
+                                )),
+                          )),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: pickedCustomerPhtot == null
+                              ? NetworkImage(
+                                  "https://thumbs.dreamstime.com/b/default-avatar-placeholder-profile-icon-male-eps-file-easy-to-edit-default-avatar-placeholder-profile-icon-male-139556753.jpg")
+                              : FileImage(pickedCustomerPhtot!) as ImageProvider<Object>,
+                          fit: BoxFit.cover),
+                      border: Border.all(
+                          color: AppConstants.primarycolors, width: 2)),
+                ),
                   Row(
                     children: [
                       Padding(
@@ -405,6 +649,49 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                               fontWeight: FontWeight.w500)),
                     ),
                   ),
+                                    Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        pickIdProof();
+                      },
+                      child: Container(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width - 80,
+                                child: Text(
+                                  pickedIdProof == null
+                                      ? "Id Proof"
+                                      : pickedIdProof!.path
+                                          .toString()
+                                          .substring(51, 80),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 18),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.document_scanner,
+                                color: Colors.grey,
+                              ),
+                            )
+                          ],
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: AppConstants.primarycolors, width: 2)),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 18.0),
                     child: InkWell(
@@ -413,7 +700,9 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                         if (valid == true) {
                           if (passwordController.text ==
                               confimPassswordContoller.text) {
-                            Service().customerReg(
+
+                                if(isCustomerPhotoPicked == true && isidproofpicked == true){
+ Service().customerRegNew(
                                 nameController.text,
                                 addressController.text,
                                 dobController.text,
@@ -421,7 +710,15 @@ class _CustomerRegScreenState extends State<CustomerRegScreen> {
                                 emailController.text,
                                 passwordController.text,
                                 context,
+                                pickedCustomerPhtot!,
+                                pickedIdProof!
                             );
+                                }else{
+                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    "Please upload user photo and id proof")));
+                                }
+                           
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
